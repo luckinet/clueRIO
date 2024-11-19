@@ -80,7 +80,7 @@
 <span></span>
 <span><span class="co"># landSystems &lt;- tibble(ID = c(), system = c())</span></span>
 <span></span>
-<span><span class="va">minimal</span> <span class="op">&lt;-</span> <span class="fu">clue_scene</span><span class="op">(</span></span>
+<span><span class="va">minimal</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/clue_scene.html">clue_scene</a></span><span class="op">(</span></span>
 <span>  name <span class="op">=</span> <span class="st">"2lus_1demand_minimal"</span>, </span>
 <span>  period <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">2019</span><span class="op">)</span>,</span>
 <span>  root <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, </span>
@@ -88,23 +88,23 @@
 <span></span>
 <span><span class="co"># first, specify the land system basis ...</span></span>
 <span><span class="va">minimal</span> <span class="op">&lt;-</span> <span class="va">minimal</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">clue_landsystems</span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">data_dir</span>, <span class="st">"/landuse.tif"</span><span class="op">)</span>, </span>
+<span>  <span class="fu"><a href="reference/clue_landsystems.html">clue_landsystems</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">data_dir</span>, <span class="st">"/landuse.tif"</span><span class="op">)</span>, </span>
 <span>                   regions <span class="op">=</span> <span class="va">regions</span>, </span>
 <span>                   cats <span class="op">=</span> <span class="va">landSystems</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># ... then the drivers used to determine patterns</span></span>
 <span><span class="va">minimal</span> <span class="op">&lt;-</span> <span class="va">minimal</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">clue_driver</span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">data_dir</span>, <span class="st">"/cropland_suit.tif"</span><span class="op">)</span>, </span>
+<span>  <span class="fu"><a href="reference/clue_driver.html">clue_driver</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">data_dir</span>, <span class="st">"/cropland_suit.tif"</span><span class="op">)</span>, </span>
 <span>              name <span class="op">=</span> <span class="st">"suitCrop"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">clue_driver</span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">data_dir</span>, <span class="st">"/forest_suit.tif"</span><span class="op">)</span>, </span>
+<span>  <span class="fu"><a href="reference/clue_driver.html">clue_driver</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">data_dir</span>, <span class="st">"/forest_suit.tif"</span><span class="op">)</span>, </span>
 <span>              name <span class="op">=</span> <span class="st">"suitFor"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># set land types up</span></span>
 <span><span class="va">minimal</span> <span class="op">&lt;-</span> <span class="va">minimal</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">clue_landtype</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"forest"</span>, resistance <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  <span class="fu"><a href="reference/clue_landtype.html">clue_landtype</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"forest"</span>, resistance <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>                suitability <span class="op">=</span> <span class="fu">tibble</span><span class="op">(</span>driver <span class="op">=</span> <span class="st">"suitFor"</span>, </span>
 <span>                                     coef <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">clue_landtype</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"cropland"</span>, resistance <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  <span class="fu"><a href="reference/clue_landtype.html">clue_landtype</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"cropland"</span>, resistance <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>                suitability <span class="op">=</span> <span class="fu">tibble</span><span class="op">(</span>driver <span class="op">=</span> <span class="st">"suitCrop"</span>, </span>
 <span>                                     coef <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, </span>
 <span>                production <span class="op">=</span> <span class="fu">tibble</span><span class="op">(</span>commodity <span class="op">=</span> <span class="st">"crops"</span>, </span>
@@ -112,23 +112,25 @@
 <span></span>
 <span><span class="co"># set commodities up</span></span>
 <span><span class="va">minimal</span> <span class="op">&lt;-</span> <span class="va">minimal</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">clue_commodity</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"crops"</span>, </span>
+<span>  <span class="fu"><a href="reference/clue_commodity.html">clue_commodity</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"crops"</span>, </span>
 <span>                 demand <span class="op">=</span> <span class="fu">tibble</span><span class="op">(</span>year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span><span class="op">:</span><span class="fl">2019</span><span class="op">)</span>, </span>
 <span>                                 region <span class="op">=</span> <span class="st">"somewhere"</span>, </span>
 <span>                                 amount <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">4760</span>, to <span class="op">=</span> <span class="fl">5000</span>, length.out <span class="op">=</span> <span class="fl">20</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">minimal</span> <span class="op">&lt;-</span> <span class="va">minimal</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">clue_conversion</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="reference/clue_conversion.html">clue_conversion</a></span><span class="op">(</span>from <span class="op">=</span> <span class="st">"forest"</span>, to <span class="op">=</span> <span class="st">"cropland"</span>, label <span class="op">=</span> <span class="st">"intensification"</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># possibly adapt options</span></span>
+<span><span class="co"># clue_options(...)</span></span>
 <span></span>
 <span><span class="co"># initiate the model</span></span>
-<span><span class="fu">clue_initiate</span><span class="op">(</span>scene <span class="op">=</span> <span class="va">minimal</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/clue_initiate.html">clue_initiate</a></span><span class="op">(</span>scene <span class="op">=</span> <span class="va">minimal</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># check whether everything is set up properly</span></span>
-<span><span class="fu">clue_validate</span><span class="op">(</span>scene <span class="op">=</span> <span class="va">minimal</span><span class="op">)</span></span>
+<span><span class="co"># possibly check whether everything is set up properly</span></span>
+<span><span class="co"># clue_validate(scene = minimal)</span></span>
 <span></span>
 <span><span class="co"># and finally run the model</span></span>
-<span><span class="fu">clue_run</span><span class="op">(</span>scene <span class="op">=</span> <span class="va">minimal</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/clue_run.html">clue_run</a></span><span class="op">(</span>scene <span class="op">=</span> <span class="va">minimal</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -142,7 +144,8 @@
 <div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li>GPL (&gt;= 3)</li>
+<li><a href="LICENSE.html">Full license</a></li>
+<li><small>GPL (&gt;= 3)</small></li>
 </ul>
 </div>
 
