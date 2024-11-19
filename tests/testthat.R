@@ -1,3 +1,3 @@
 library(testthat)
 
-test_check("scenarIO")
+test_check("clueRIO")

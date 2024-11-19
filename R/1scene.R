@@ -53,7 +53,7 @@ setValidity("registry", function(object){
   if (!.hasSlot(object = object, name = "period")) {
     errors = c(errors, "the registry does not have a slot named 'period'.")
   } else {
-    if(!is.null(object@dimensions$period)){
+    if(!is.null(object@period)){
       if(!is.numeric(object@period)){
         errors <- c(errors, "'schema$period' must have a numeric value.")
       }

@@ -97,14 +97,16 @@ minimal <- minimal |>
                                  amount = seq(from = 4760, to = 5000, length.out = 20)))
 
 minimal <- minimal |> 
-  clue_conversion()
+  clue_conversion(from = "forest", to = "cropland", label = "intensification")
 
+# possibly adapt options
+# clue_options(...)
 
 # initiate the model
 clue_initiate(scene = minimal)
 
-# check whether everything is set up properly
-clue_validate(scene = minimal)
+# possibly check whether everything is set up properly
+# clue_validate(scene = minimal)
 
 # and finally run the model
 clue_run(scene = minimal)

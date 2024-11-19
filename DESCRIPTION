@@ -26,6 +26,7 @@ Imports:
     raster,
     readr,
     rlang,
+    purrr,
     stringr,
     tibble,
     tidyr,
@@ -33,12 +34,12 @@ Imports:
     viridisLite,
     visNetwork,
     ggplot2,
-    crayon
+    crayon,
+    methods
 Suggests: 
-    testthat,
+    knitr,
     rmarkdown,
-    knitr
-VignetteBuilder: knitr
+    testthat (>= 3.0.0)
 Depends: 
     R (>= 2.10)
 Config/testthat/edition: 3
