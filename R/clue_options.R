@@ -36,18 +36,18 @@
 #'   of convergence. Value should be between 0.001 and 0.1, with higher values
 #'   leading to more stable and more likely solution and lower values leading to
 #'   faster and less likely solution.
-#' @param protected [[`logical(1)`][logical]\cr whether or not to consider
+#' @param protected [`logical(1)`][logical]\cr whether or not to consider
 #'   protected areas (if the gridded object 'protected' has been given). (not
 #'   implemented yet)
+#' @return no return value, called for the side-effect of setting model options.
 #' @importFrom checkmate assertIntegerish assertNumeric
-#' @importFrom readr read_file
 #' @importFrom stringr str_split
 #' @export
 
-setOptions <- function(iter_mode = NULL, conv1 = NULL, conv2 = NULL,
-                       out_type = NULL, rs_reg = NULL, ls_hist = NULL,
-                       neigh = NULL, loc_pref = NULL, dyn_lusmat = NULL,
-                       out_write = NULL, iter_param = NULL, protected = TRUE){
+clue_options <- function(iter_mode = NULL, conv1 = NULL, conv2 = NULL,
+                         out_type = NULL, rs_reg = NULL, ls_hist = NULL,
+                         neigh = NULL, loc_pref = NULL, dyn_lusmat = NULL,
+                         out_write = NULL, iter_param = NULL, protected = TRUE){
 
   assertIntegerish(x = iter_mode, lower = 0, upper = 2, null.ok = TRUE)
   assertNumeric(x = conv1, lower = 0, upper = 100, null.ok = TRUE)
@@ -61,9 +61,9 @@ setOptions <- function(iter_mode = NULL, conv1 = NULL, conv2 = NULL,
   assertIntegerish(x = out_write, lower = 0, upper = 2, null.ok = TRUE)
   assertNumeric(x = iter_param, null.ok = TRUE)
 
-  opts <- getOption("lclu")
+  opts <- getOption("clue")
 
-  params <- opts$meta$file
+  params <- opts$options
 
   iter_vars <- str_split(params[["value"]][14], pattern = "\t")[[1]]
   if(!is.null(iter_mode)){
@@ -122,16 +122,12 @@ setOptions <- function(iter_mode = NULL, conv1 = NULL, conv2 = NULL,
     params[["value"]][24] <- iter_param
   }
 
-  opts$meta$file <- params
-  options(lclu = opts)
+  opts$options <- params
 
-  # outMain <- opts$tables$main
-  # assertTibble(x = outMain, nrows = 24, ncols = 2, types = c("character", "character"), any.missing = FALSE)
-  # assertNames(x = names(outMain), identical.to = c("var", "value"))
-  #
-  # outMain <- outMain %>%
-  #   pull(value) %>%
-  #   paste(collapse = "\n")
-  # writeLines(outMain, paste0(opts$path$model, "/main.1"))
+  # store the root path in the options
+  oldOptions <- options()
+  on.exit(options(oldOptions))
+
+  options(clue = opts)
 
 }
