@@ -10,22 +10,22 @@
 #' @slot drivers [`list(.)`][list]\cr
 #' @slot validated [`logical(1)`][logical]\cr
 
-registry <- setClass(Class = "registry",
-                     slots = c(meta = "list",
-                               period = "numeric",
-                               landtypes = "list",
-                               commodities = "list",
-                               landsystems = "data.frame",
-                               drivers = "list",
-                               validated = "logical")
+scene <- setClass(Class = "scene",
+                  slots = c(meta = "list",
+                            period = "numeric",
+                            landtypes = "list",
+                            commodities = "list",
+                            landsystems = "data.frame",
+                            drivers = "list",
+                            validated = "logical")
 )
 
-setValidity("registry", function(object){
+setValidity("scene", function(object){
 
   errors = character()
 
   if (!.hasSlot(object = object, name = "meta")) {
-    errors = c(errors, "the registry does not have a slot named 'meta'.")
+    errors = c(errors, "the scene does not have a slot named 'meta'.")
   } else {
     if (!is.list(object@name)) {
       errors = c(errors, "the slot 'meta' is not a list.")
@@ -51,7 +51,7 @@ setValidity("registry", function(object){
   }
 
   if (!.hasSlot(object = object, name = "period")) {
-    errors = c(errors, "the registry does not have a slot named 'period'.")
+    errors = c(errors, "the scene does not have a slot named 'period'.")
   } else {
     if(!is.null(object@period)){
       if(!is.numeric(object@period)){
@@ -61,7 +61,7 @@ setValidity("registry", function(object){
   }
 
   if (!.hasSlot(object = object, name = "landtypes")) {
-    errors = c(errors, "the registry does not have a slot named 'landtypes'.")
+    errors = c(errors, "the scene does not have a slot named 'landtypes'.")
   } else {
     if(!is.null(object@landtypes)){
       if(!is.list(object@landtypes)){
@@ -71,7 +71,7 @@ setValidity("registry", function(object){
   }
 
   if (!.hasSlot(object = object, name = "commodities")) {
-    errors = c(errors, "the registry does not have a slot named 'commodities'.")
+    errors = c(errors, "the scene does not have a slot named 'commodities'.")
   } else {
     if(!is.null(object@commodities)){
       if(!is.list(object@commodities)){
@@ -81,7 +81,7 @@ setValidity("registry", function(object){
   }
 
   if (!.hasSlot(object = object, name = "landsystems")) {
-    errors = c(errors, "the registry does not have a slot named 'landsystems'.")
+    errors = c(errors, "the scene does not have a slot named 'landsystems'.")
   } else {
     if(!is.null(object@landsystems)){
       if(!is.data.frame(object@landsystems)){
@@ -91,7 +91,7 @@ setValidity("registry", function(object){
   }
 
   if (!.hasSlot(object = object, name = "drivers")) {
-    errors = c(errors, "the registry does not have a slot named 'drivers'.")
+    errors = c(errors, "the scene does not have a slot named 'drivers'.")
   } else {
     if(!is.null(object@dimensions$drivers)){
       if(!is.list(object@drivers)){
@@ -116,7 +116,7 @@ setValidity("registry", function(object){
 
 })
 
-#' Print registry in the console (not working yet)
+#' Print scene in the console
 #'
 #' @param object [`scene(1)`][scene]\cr object to \code{show}.
 #' @details
@@ -128,7 +128,7 @@ setValidity("registry", function(object){
 #' @importFrom stats na.omit
 
 setMethod(f = "show",
-          signature = "registry",
+          signature = "scene",
           definition = function(object){
 
             message("under development")
