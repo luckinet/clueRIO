@@ -10,7 +10,7 @@
 #' @details Additional details...
 #' @return no return value, called for the side-effect of creating directories
 #'   and initial files.
-#' @importFrom checkmate assertClass
+#' @importFrom checkmate assertClass assertFileExists assertTRUE testDirectory
 #' @export
 
 clue_initiate <- function(scene, clue.exe = NULL){
