@@ -1,12 +1,12 @@
 #' Build an example CLUE scene
 #'
 #' This function helps setting up an example scene until a certain step.
-#' @param path [\code{character(1)}]\cr The scene has by default the root
+#' @param path [`character(1)`][character]\cr The scene has by default the root
 #'   directory tempdir(), but if you want it in a particular location, specify
 #'   that in this argument.
-#' @param until [\code{character(1)}]\cr The step until which the scene shall be
+#' @param until [`character(1)`][character]\cr The step until which the scene shall be
 #'   built, one of \code{...},
-#' @param verbose [\code{logical(1)}]\cr be verbose about building the example
+#' @param verbose [`logical(1)`][logical]\cr be verbose about building the example
 #'   scene (default \code{FALSE}).
 #' @return No return value, called for the side effect of creating an example
 #'   scene at the specified \code{path}.
@@ -25,7 +25,7 @@
 clue_example <- function(path = NULL, until = NULL, verbose = FALSE){
 
   # set internal paths
-  inPath <- system.file("test_datasets", package = "arealDB", mustWork = TRUE)
+  inPath <- system.file("test_datasets", package = "clueRIO", mustWork = TRUE)
   steps <- c("")
 
 
