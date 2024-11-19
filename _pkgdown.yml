@@ -4,7 +4,7 @@ template:
 authors:
   Steffen Ehrmann:
     href:  https://orcid.org/0000-0002-2958-0796
-title: scenarIO
+title: clueRIO
 url: http://ehrmanns.github.io/cluerio
 development:
   mode: release
