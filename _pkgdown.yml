@@ -1,0 +1,22 @@
+template:
+  bootstrap: 5
+
+authors:
+  Steffen Ehrmann:
+    href:  https://orcid.org/0000-0002-2958-0796
+title: scenarIO
+url: http://ehrmanns.github.io/cluerio
+development:
+  mode: release
+
+navbar:
+  left:
+    - text: "Get Started"
+      href: articles/cluerio.html
+    - text: "Reference"
+      href: reference/index.html
+    - text: "Changelog"
+      href: news/index.html
+  right:
+    - icon: fa-github
+      href: https://github.com/luckinet/cluerio
