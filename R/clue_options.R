@@ -26,6 +26,7 @@
 #'   implemented): \itemize{ \item 0 = off (default), \item 1 = on in simulation
 #'   (automatically chosen on use of \code{\link{setNeighbourhood}}), \item 2 =
 #'   only influences calculated, no simulation}
+#' @param loc_pref [`integerish(1)`][integer]\cr
 #' @param dyn_lusmat [`integerish(1)`][integer]\cr Dynamic landuse matrix (not
 #'   yet implemented): \itemize{ \item 0 = off (default), \item 1 = on}
 #' @param out_write [`integerish(1)`][integer]\cr Write selected output

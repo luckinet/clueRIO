@@ -18,6 +18,12 @@ clue_landtype(
 
 \item{name}{\code{\link[=character]{character(1)}}\cr name of the land type.}
 
+\item{resistance}{\code{\link[=numeric]{numeric(1)}}\cr the relative conversion
+resistance to land change.}
+
+\item{limit}{\code{\link[=integer]{integerish(1)}}\cr the number of time steps a
+land-use type is allowed to remain in a location at most.}
+
 \item{suitability}{\code{\link[=data.frame]{data.frame(1)}}\cr table of driver and
 coefficient of suitability. Must have names \code{driver} and \code{coef}.
 Driver names must correspond to the names defined in

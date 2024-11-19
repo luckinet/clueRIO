@@ -2,6 +2,10 @@
 #'
 #' @param scene description
 #' @param name [`character(1)`][character]\cr name of the land type.
+#' @param resistance [`numeric(1)`][numeric]\cr the relative conversion
+#'   resistance to land change.
+#' @param limit [`integerish(1)`][integer]\cr the number of time steps a
+#'   land-use type is allowed to remain in a location at most.
 #' @param production [`data.frame(1)`][data.frame]\cr table of what, with which
 #'   priority and how much this land type produces. Must have names
 #'   \code{commodity}, \code{priority} and \code{amount}.
