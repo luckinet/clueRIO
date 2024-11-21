@@ -27,7 +27,7 @@ setValidity("scene", function(object){
   if (!.hasSlot(object = object, name = "meta")) {
     errors = c(errors, "the scene does not have a slot named 'meta'.")
   } else {
-    if (!is.list(object@name)) {
+    if (!is.list(object@meta)) {
       errors = c(errors, "the slot 'meta' is not a list.")
     }
     if(!all(names(object@meta) %in% c("name", "version", "description"))){
@@ -93,7 +93,7 @@ setValidity("scene", function(object){
   if (!.hasSlot(object = object, name = "drivers")) {
     errors = c(errors, "the scene does not have a slot named 'drivers'.")
   } else {
-    if(!is.null(object@dimensions$drivers)){
+    if(!is.null(object@drivers)){
       if(!is.list(object@drivers)){
         errors <- c(errors, "'schema$drivers' must be a list.")
       }
