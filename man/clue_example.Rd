@@ -7,14 +7,14 @@
 clue_example(path = NULL, until = NULL, verbose = FALSE)
 }
 \arguments{
-\item{path}{\link{\code{character(1)}}\cr The scene has by default the root
+\item{path}{\code{\link[=character]{character(1)}}\cr The scene has by default the root
 directory tempdir(), but if you want it in a particular location, specify
 that in this argument.}
 
-\item{until}{\link{\code{character(1)}}\cr The step until which the scene shall be
+\item{until}{\code{\link[=character]{character(1)}}\cr The step until which the scene shall be
 built, one of \code{...},}
 
-\item{verbose}{\link{\code{logical(1)}}\cr be verbose about building the example
+\item{verbose}{\code{\link[=logical]{logical(1)}}\cr be verbose about building the example
 scene (default \code{FALSE}).}
 }
 \value{
