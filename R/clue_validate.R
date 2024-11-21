@@ -56,8 +56,10 @@ clue_validate <- function(scene, verbose = FALSE){
   # err <- c(err, temp)
   # if(!verbose) .printOut(err)
 
+  # test that 'landtypes$suitability$driver' is a valid driver
+  # test that 'landtypes$production$crop' is a valid crop
 
-  scene@valid <- TRUE
+  scene@validated <- TRUE
 
   return(scene)
 }

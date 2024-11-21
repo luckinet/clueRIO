@@ -23,7 +23,7 @@ clue_landtype <- function(scene, name, resistance = NULL, limit = NULL,
 
   assertClass(x = scene, classes = "scene")
   assertCharacter(x = name, len = 1, any.missing = FALSE)
-  assertDataFrame(x = suitability, ncols = 3, all.missing = FALSE, null.ok = TRUE)
+  assertDataFrame(x = suitability, ncols = 2, all.missing = FALSE, null.ok = TRUE)
   if(!is.null(suitability)){
     assertNames(x = names(suitability), permutation.of = c("driver", "coef"))
   }
@@ -32,6 +32,15 @@ clue_landtype <- function(scene, name, resistance = NULL, limit = NULL,
     assertNames(x = names(production), permutation.of = c("commodity", "priority", "amount"))
   }
 
+  # test that 'name' is a valid land system
+  assertChoice(x = name, choices = scene@landsystems$system)
+
+  temp <- list(resistance = resistance,
+               limit = limit,
+               suitability = suitability,
+               production = production)
+
+  scene@landtypes[[name]] <- temp
 
   return(scene)
 }

@@ -10,15 +10,29 @@
 #' @importFrom checkmate assertClass
 #' @export
 
-clue_commodity <- function(scene, name, demand = NULL){
+clue_commodity <- function(scene, name, match = "exact", demand = NULL){
 
   assertClass(x = scene, classes = "scene")
   assertCharacter(x = name, len = 1, any.missing = FALSE)
+  assertChoice(x = match, choices = c("exact", "minimum", "maximum"))
   assertDataFrame(x = demand, ncols = 3, all.missing = FALSE, null.ok = TRUE)
   if(!is.null(demand)){
     assertNames(x = names(demand), permutation.of = c("year", "region", "amount"))
   }
 
+  # update demand type
+  if(match == "exact"){
+    dt <- 1
+  } else if (match == "minimum"){
+    dt <- -1
+  } else {
+    dt <- 101
+  }
+
+  temp <- list(demand = demand,
+               match = as.character(dt))
+
+  scene@commodities[[name]] <- temp
 
   return(scene)
 }
