@@ -51,53 +51,60 @@ devtools::install_github("luckinet/clueRIO")
 
 ``` r
 library(clueRIO)
+library(dplyr)
+library(sf)
+library(terra)
 
-data_dir <- system.file("test_datasets", package = "clueRIO", mustWork = TRUE)
+data <- system.file("test_data", package = "clueRIO", mustWork = TRUE)
 
-regions <- st_read(dsn = paste0(data_dir, "/example_region.gpkg")) |> 
-  mutate(region = "somewhere")
-
-# landSystems <- tibble(ID = c(), system = c())
+# open a new scene for the model
+region <- st_read(dsn = paste0(data, "/test_region.gpkg"))
 
 minimal <- clue_scene(
-  name = "2lus_1demand_minimal", 
-  period = c(2000, 2019),
-  root = tempdir(), 
-  description = "this is a minimal showcase where two landuse ...")
+  root = paste0(tempdir(), "/ls2d1"), 
+  name = "ls2d1", 
+  period = c(2000, 2024),
+  regions = region,
+  description = "this is a minimal showcase where forest is converted to cropland to produce crops.")
 
 # first, specify the land system basis ...
+landsystems <- rast(x = paste0(data, "/ls2.tif"))
+systems <- tibble(ID = c(0, 1), 
+                  type = c("forest", "cropland"))
+
 minimal <- minimal |> 
-  clue_landsystems(file = paste0(data_dir, "/landuse.tif"), 
-                   regions = regions, 
-                   cats = landSystems)
+  clue_landsystems(file = landsystems, cats = systems)
+
+# possibly set a mask
+# clue_mask(file = ...)
 
 # ... then the drivers used to determine patterns
 minimal <- minimal |> 
-  clue_driver(file = paste0(data_dir, "/cropland_suit.tif"), 
-              name = "suitCrop") |> 
-  clue_driver(file = paste0(data_dir, "/forest_suit.tif"), 
-              name = "suitFor")
+  clue_driver(file = paste0(data, "/suitability1.tif"), 
+              name = "cropland_suit") |> 
+  clue_driver(file = paste0(data, "/suitability2_0.tif"), 
+              name = "forest_suit")
 
 # set land types up
 minimal <- minimal |> 
   clue_landtype(name = "forest", resistance = 0.5,
-                suitability = tibble(driver = "suitFor", 
-                                     coef = 1)) |> 
+                suitability = tibble(driver = "forest_suit", 
+                                     coef = 1),
+                conversion = tibble(to = "cropland",
+                                    label = "intensification")) |> 
   clue_landtype(name = "cropland", resistance = 0.5,
-                suitability = tibble(driver = "suitCrop", 
+                suitability = tibble(driver = "cropland_suit", 
                                      coef = 1), 
                 production = tibble(commodity = "crops", 
-                                    amount = 1))
+                                    amount = 1,
+                                    priority = 1))
 
 # set commodities up
 minimal <- minimal |> 
   clue_commodity(name = "crops", 
                  demand = tibble(year = c(2000:2019), 
-                                 region = "somewhere", 
+                                 region = "ravenholm", 
                                  amount = seq(from = 4760, to = 5000, length.out = 20)))
-
-minimal <- minimal |> 
-  clue_conversion(from = "forest", to = "cropland", label = "intensification")
 
 # possibly adapt options
 # clue_options(...)
