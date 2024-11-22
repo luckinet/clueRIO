@@ -27,6 +27,8 @@
 regGridded <- function(name = NULL, dir = NULL, pattern = NULL, crs = NULL,
                        obj = NULL, table = NULL, ...){
 
+  .Deprecated("clue_driver")
+
   opts <- getOption("lclu")
 
   assertCharacter(x = name, any.missing = FALSE, len = 1)

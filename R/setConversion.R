@@ -24,6 +24,8 @@
 setConversion <- function(from = NULL, to = NULL, label = NULL, thresh = NULL,
                           auto = NULL, mask = NULL){
 
+  .Deprecated("clue_landtype")
+
   opts <- getOption("lclu")
 
   assertCharacter(x = from, any.missing = FALSE, len = 1)

@@ -33,6 +33,8 @@
 setNeighbourhood <- function(landuse = NULL, const = NULL, ..., weight = NULL,
                              kernel = matrix(1, 3, 3), table = NULL){
 
+  .Deprecated("clue_landtype")
+
   opts <- getOption("lclu")
   neigh <- opts$tables$alloc2
 

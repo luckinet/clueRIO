@@ -23,6 +23,8 @@
 
 setSuitability <- function(landuse = NULL, const = NULL, ..., table = NULL){
 
+  .Deprecated("clue_landtype")
+
   opts <- getOption("lclu")
 
   assertTibble(x = table, min.cols = 3, nrows = length(opts$attributes$landuse$system), null.ok = TRUE)

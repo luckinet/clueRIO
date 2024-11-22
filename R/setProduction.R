@@ -26,6 +26,8 @@
 setProduction <- function(of = NULL, by = NULL, amount = NULL, priority = NULL,
                           exclude = NULL){
 
+  .Deprecated("clue_landtype")
+
   opts <- getOption("lclu")
 
   assertCharacter(x = of, any.missing = FALSE, len = 1)

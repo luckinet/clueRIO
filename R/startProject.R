@@ -22,6 +22,8 @@ startProject <- function(root = NULL, name = NULL, start = NULL, end = NULL,
                          landuse = NULL, demands = NULL, resolution = NULL,
                          extent = NULL){
 
+  .Deprecated("clue_scene")
+
   assertCharacter(x = name, any.missing = FALSE, len = 1)
   assertIntegerish(x = start, any.missing = FALSE, len = 1)
   assertIntegerish(x = end, any.missing = FALSE, len = 1)

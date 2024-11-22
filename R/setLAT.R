@@ -13,6 +13,8 @@
 
 setLAT <- function(table = NULL) {
 
+  .Deprecated("clue_landsystems")
+
   opts <- getOption("lclu")
 
   assertDataFrame(x = table, min.cols = 2)

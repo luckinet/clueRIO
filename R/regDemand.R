@@ -12,6 +12,8 @@
 
 regDemand <- function(table = NULL, values = NULL, region = NULL){
 
+  .Deprecated("clue_commodity")
+
   opts <- getOption("lclu")
 
   assertDataFrame(x = table)

@@ -13,6 +13,8 @@
 
 regCommodity <- function(name = NULL, match = "exact", table = NULL){
 
+  .Deprecated("clue_commodity")
+
   opts <- getOption("lclu")
 
   assertCharacter(x = name, any.missing = FALSE, len = 1)

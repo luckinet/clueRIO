@@ -19,6 +19,8 @@
 
 regLanduse <- function(name = NULL, resistance = NULL, limit = NULL, table = NULL){
 
+  .Deprecated("clue_landtype")
+
   opts <- getOption("lclu")
 
   assertCharacter(x = name, any.missing = FALSE, len = 1)

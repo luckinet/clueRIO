@@ -18,6 +18,8 @@
 
 regRegions <- function(features = NULL, region = NULL){
 
+  .Deprecated("clue_landsystems")
+
   opts <- getOption("lclu")
 
   assertClass(x = features, classes = "sf")
