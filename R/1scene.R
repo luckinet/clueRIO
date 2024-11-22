@@ -5,18 +5,19 @@
 #' @slot meta [`list(3)`][list]\cr
 #' @slot period [`numeric(2)`][numeric]\cr
 #' @slot landtypes [`list(.)`][list]\cr
+#' @slot drivers [`list(.)`][list]\cr
 #' @slot commodities [`list(.)`][list]\cr
 #' @slot landsystems [`data.frame(.)`][data.frame]\cr
-#' @slot drivers [`list(.)`][list]\cr
 #' @slot validated [`logical(1)`][logical]\cr
+#' @details
 
 scene <- setClass(Class = "scene",
                   slots = c(meta = "list",
                             period = "numeric",
-                            landtypes = "list",
-                            commodities = "list",
                             landsystems = "data.frame",
                             drivers = "list",
+                            landtypes = "list",
+                            commodities = "list",
                             validated = "logical")
 )
 
@@ -30,7 +31,7 @@ setValidity("scene", function(object){
     if (!is.list(object@meta)) {
       errors = c(errors, "the slot 'meta' is not a list.")
     }
-    if(!all(names(object@meta) %in% c("name", "version", "description"))){
+    if(!all(names(object@meta) %in% c("name", "version", "path", "description"))){
       errors <- c(errors, "'names(schema$meta)' must be a permutation of set {name,version,description}")
     }
     if(!is.null(object@meta$name)){
@@ -41,6 +42,11 @@ setValidity("scene", function(object){
     if(!is.null(object@meta$version)){
       if(!is.character(object@meta$version)){
         errors <- c(errors, "'schema$meta$version' must have a character value.")
+      }
+    }
+    if(!is.null(object@meta$path)){
+      if(!is.character(object@meta$path)){
+        errors <- c(errors, "'schema$meta$path' must have a character value.")
       }
     }
     if(!is.null(object@meta$description)){
@@ -131,7 +137,7 @@ setMethod(f = "show",
           signature = "scene",
           definition = function(object){
 
-            message("under development")
+            message("please use 'str(scene)' for now")
 
           }
 
