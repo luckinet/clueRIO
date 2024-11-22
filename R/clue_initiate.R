@@ -16,30 +16,90 @@
 clue_initiate <- function(scene, clue.exe = NULL){
 
   assertClass(x = scene, classes = "scene")
-  assertFileExists(x = clue.exe, access = "r", extension = "exe")
+  assertCharacter(x = clue.exe, len = 1, any.missing = FALSE, null.ok = TRUE)
 
-  assertTRUE(x = scene@valid)
+  assertTRUE(x = scene@validated)
 
-  root <- getOption("clue_path")
-  thisPath <- paste0(root, "/", scene@name)
+  # model directory
+  root <- file.path(scene@meta$path)
 
-  # create directories ----
-  if (!testDirectory(x = thisPath, access = "rw")) {
-    dir.create(thisPath, recursive = TRUE)
-    dir.create(file.path(thisPath, "backup"))
-    dir.create(file.path(thisPath, "input"))
-    dir.create(file.path(thisPath, "output"))
-    if(is.null(clue.exe)){
-      file.copy(from = system.file("CLUMondo.exe", package = "clueRIO", mustWork = TRUE),
-                to = paste0(thisPath, "/CLUMondo.exe"))
-    } else {
-      file.copy(from = clue.exe,
-                to = paste0(thisPath, "/CLUMondo.exe"))
-    }
+  # create executable ----
+  if(is.null(clue.exe)){
+    file.copy(from = system.file("CLUMondo.exe", package = "clueRIO", mustWork = TRUE),
+              to = paste0(root, "CLUMondo.exe"))
+  } else {
+    assertFileExists(x = clue.exe, access = "r", extension = "exe")
+    file.copy(from = clue.exe,
+              to = paste0(root, "CLUMondo.exe"))
   }
 
-  # ----
+  # save landsystems.tif as cov_all.0 ----
+  # if(length(list.files(wd, pattern = "cov_all.0")) == 0) {
+  #   message("please create a gridded layer of the initial landuse with 'regGridded(name = \"landuse\", ...)'")
+  # }
 
+
+  # insert code from makeModel.R here
+  # insert code from testModel.R here
+
+
+
+  # newlLus <- newAllow <- newTypes <- newSuit <- newNeigh <- tibble(system = landuse)
+  # newlLus[,demands] <- 0
+  # newAllow[,landuse] <- 0
+  # newTypes[,landuse] <- NA_character_
+  # newSuit$alloc <- NA_character_
+  # newSuit$const <- NA_real_
+  # newNeigh$alloc <- NA_character_
+  # newNeigh$neighmat <- NA_character_
+  # newNeigh$const <- NA_real_
+  # newNeigh$weight <- 0
+  #
+  #
+  # opts <- list(path = list(root = root,
+  #                          model = wd),
+  #              meta = list(name = name,
+  #                          time = paste0(strsplit(x = format(Sys.time(), format="%Y%m%d_%H%M%S"), split = "[ ]")[[1]], collapse = "_"),
+  #                          first_year = start,
+  #                          last_year = end,
+  #                          stepwise = FALSE,
+  #                          cells = NULL,
+  #                          resolution = resolution,
+  #                          extent = extent),
+  #              attributes = list(gridded = tibble(driver = character(),
+  #                                                 file = character(),
+  #                                                 dynamic = logical()),
+  #                                landuse = tibble(system = landuse,
+  #                                                 resistance = NA_real_,
+  #                                                 preference = NA_real_),
+  #                                demand = tibble(type = demands,
+  #                                                match = NA_character_)),
+  #              tables = list(main = tibble(var = c("ls_types_n", "regions_n", "drivers_max", "drivers_tot",
+  #                                                  "demand_types_n", "mapRows_n", "mapCols_n", "map_res",
+  #                                                  "map_xmin", "map_ymin", "ls_types", "resistance",
+  #                                                  "demand_type", "iter_vars", "years", "drivers_dyn",
+  #                                                  "out_type", "rs_reg", "ls_hist", "neigh", "loc_pref",
+  #                                                  "dyn_lusmat", "out_write", "iter_param"),
+  #                                          value = c(NA, 1, 1, 0, NA, NA,
+  #                                                    NA, NA, NA, NA, NA, NA,
+  #                                                    NA, paste(c(0, 0.5, 1), collapse = "\t"), paste(c(start, end), collapse = "\t"), NA, 3, 0,
+  #                                                    paste(c(1, 5), collapse = "\t"), 0, 0, 0, 1, 0.05)),
+  #                            alloc1 = newSuit,
+  #                            alloc2 = newNeigh,
+  #                            allow = newAllow,
+  #                            lusconv = newlLus,
+  #                            lusmatrix = newlLus,
+  #                            allowTypes = newTypes),
+  #              data = list(regions = NULL,
+  #                          demand = NULL),
+  #              files = list(),
+  #              modifier = NULL)
+
+
+  # which files need to be initiated?
+  # - cov_all.0
+  # - region.fil
+  # - sc1gr[1-X].fil
 
 
   return(scene)
