@@ -4,20 +4,19 @@
 \alias{clue_landsystems}
 \title{Set the initial land systems information}
 \usage{
-clue_landsystems(scene, file, regions, cats = NULL)
+clue_landsystems(scene, file, cats = NULL, ...)
 }
 \arguments{
 \item{scene}{description}
 
-\item{file}{description}
+\item{cats}{(mention that either to provide this, or set it already before in
+\code{map}).}
 
-\item{regions}{description}
+\item{...}{additional arguments for for writing files with
+\link[terra]{writeRaster}.}
 
-\item{cats}{description}
+\item{map}{description}
 }
 \description{
 Set the initial land systems information
-}
-\details{
-Additional details...
 }

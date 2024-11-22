@@ -4,7 +4,7 @@
 \alias{clue_driver}
 \title{Set drivers of land systems}
 \usage{
-clue_driver(scene, file, name = NULL)
+clue_driver(scene, file, name = NULL, ...)
 }
 \arguments{
 \item{scene}{description}
@@ -12,10 +12,10 @@ clue_driver(scene, file, name = NULL)
 \item{file}{description}
 
 \item{name}{description}
+
+\item{...}{additional arguments for for writing files with
+\link[terra]{writeRaster}.}
 }
 \description{
 Set drivers of land systems
-}
-\details{
-Additional details...
 }

@@ -4,7 +4,7 @@
 \alias{clue_scene}
 \title{Create a new CLUE scene}
 \usage{
-clue_scene(root, name, period, description = NULL)
+clue_scene(root, name, period, regions, description = NULL)
 }
 \arguments{
 \item{root}{\code{\link[=character]{character(1)}}\cr path where the model files will be
@@ -14,13 +14,21 @@ stored.}
 
 \item{period}{\code{\link[=integer]{integerish(2)}}\cr start and end year of the scene.}
 
+\item{regions}{description}
+
 \item{description}{\code{\link[=character]{character(1)}}\cr the description of the
 scene.}
 }
 \value{
-an empty CLUE scene that captures initial metadata of the CLUE model
-run, but doesn't contain any parameters yet.
+object of class \code{\link{scene}} that contains initial meta data.
 }
 \description{
 Create a new CLUE scene
+}
+\examples{
+minimal <- clue_scene(
+    root = paste0(tempdir(), "/ls2d1"),
+    name = "ls2d1",
+    period = c(2000, 2024),
+    description = "this is a minimal showcase where forest is converted to cropland to produce crops.")
 }

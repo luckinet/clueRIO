@@ -4,12 +4,21 @@
 \alias{clue_commodity}
 \title{Set commodities and their attributes}
 \usage{
-clue_commodity(scene, name, demand = NULL)
+clue_commodity(scene, name, excluded = NULL, match = "exact", demand = NULL)
 }
 \arguments{
 \item{scene}{description}
 
 \item{name}{\code{\link[=character]{character(1)}}\cr name of the commodity.}
+
+\item{excluded}{\code{\link[=character]{character(.)}}\cr land types from which the
+commodity is excluded to be produced.}
+
+\item{match}{\code{\link[=character]{character(1)}}\cr the type of match for this
+commodity, either \code{"exact"} (the default), \code{"minimum"} (the
+demand indicated is the minimum demand that needs to be achieved, any
+overshoot is accepted) or \code{"maximum"} (the demand indicated is the
+maximum that may be reached, any undershoot is accepted).}
 
 \item{demand}{\code{\link[=data.frame]{data.frame(1)}}\cr table of when, where and how
 much of the commodity is produced. Must have names \code{year},
@@ -17,7 +26,4 @@ much of the commodity is produced. Must have names \code{year},
 }
 \description{
 Set commodities and their attributes
-}
-\details{
-Additional details...
 }

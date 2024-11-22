@@ -10,7 +10,10 @@ clue_landtype(
   resistance = NULL,
   limit = NULL,
   suitability = NULL,
-  production = NULL
+  production = NULL,
+  conversion = NULL,
+  neighborhood = NULL,
+  preference = NULL
 )
 }
 \arguments{
@@ -24,18 +27,26 @@ resistance to land change.}
 \item{limit}{\code{\link[=integer]{integerish(1)}}\cr the number of time steps a
 land-use type is allowed to remain in a location at most.}
 
-\item{suitability}{\code{\link[=data.frame]{data.frame(1)}}\cr table of driver and
-coefficient of suitability. Must have names \code{driver} and \code{coef}.
-Driver names must correspond to the names defined in
+\item{suitability}{\code{\link[=data.frame]{data.frame(2)}}\cr table of driver and
+coefficient of suitability. Must have names \code{'driver'} and
+\code{'coef'}. Driver names must correspond to the names defined in
 \code{\link{clue_driver}}.}
 
-\item{production}{\code{\link[=data.frame]{data.frame(1)}}\cr table of what, with which
+\item{production}{\code{\link[=data.frame]{data.frame(3)}}\cr table of what, with which
 priority and how much this land type produces. Must have names
-\code{commodity}, \code{priority} and \code{amount}.}
+\code{'commodity'}, \code{'priority'} and \code{'amount'}.}
+
+\item{conversion}{\code{\link[=data.frame]{data.frame(.)}}\cr table of land types into
+which the land type can be converted. Must have names \code{'to'} and
+\code{'label'} and optionally one of \code{'thresh'}, \code{'auto'} or
+\code{'mask'}.}
+
+\item{neighborhood}{\code{\link[=data.frame]{data.frame(1)}}\cr work in progress}
+
+\item{preference}{\code{\link[=data.frame]{data.frame(2)}}\cr table of where and how
+location specific preferences are used. Must have names \code{'layer'} and
+\code{'weight'}.}
 }
 \description{
 Set land types and their attributes
-}
-\details{
-Additional details...
 }
