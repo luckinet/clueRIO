@@ -2,18 +2,28 @@
 #'
 #' @param scene description
 #' @param name [`character(1)`][character]\cr name of the commodity.
+#' @param excluded [`character(.)`][character]\cr land types from which the
+#'   commodity is excluded to be produced.
+#' @param match [`character(1)`][character]\cr the type of match for this
+#'   commodity, either \code{"exact"} (the default), \code{"minimum"} (the
+#'   demand indicated is the minimum demand that needs to be achieved, any
+#'   overshoot is accepted) or \code{"maximum"} (the demand indicated is the
+#'   maximum that may be reached, any undershoot is accepted).
 #' @param demand [`data.frame(1)`][data.frame]\cr table of when, where and how
 #'   much of the commodity is produced. Must have names \code{year},
 #'   \code{region} and \code{amount}.
-#' @details Additional details...
+#' @details
 #' @return
-#' @importFrom checkmate assertClass
+#' @importFrom checkmate assertClass assertCharacter assertChoice
+#'   assertDataFrame assertNames
 #' @export
 
-clue_commodity <- function(scene, name, match = "exact", demand = NULL){
+clue_commodity <- function(scene, name, excluded = NULL, match = "exact",
+                           demand = NULL){
 
   assertClass(x = scene, classes = "scene")
   assertCharacter(x = name, len = 1, any.missing = FALSE)
+  assertCharacter(x = excluded, any.missing = FALSE, null.ok = TRUE)
   assertChoice(x = match, choices = c("exact", "minimum", "maximum"))
   assertDataFrame(x = demand, ncols = 3, all.missing = FALSE, null.ok = TRUE)
   if(!is.null(demand)){
@@ -29,8 +39,9 @@ clue_commodity <- function(scene, name, match = "exact", demand = NULL){
     dt <- 101
   }
 
-  temp <- list(demand = demand,
-               match = as.character(dt))
+  temp <- list(match = as.character(dt),
+               excluded = excluded,
+               demand = demand)
 
   scene@commodities[[name]] <- temp
 
