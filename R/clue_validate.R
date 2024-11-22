@@ -56,8 +56,18 @@ clue_validate <- function(scene, verbose = FALSE){
   # err <- c(err, temp)
   # if(!verbose) .printOut(err)
 
-  # test that 'landtypes$suitability$driver' is a valid driver
-  # test that 'landtypes$production$crop' is a valid crop
+  # - ensure that 'landtypes$suitability$driver' is a valid driver
+  # - ensure that 'landtypes$production$crop' is a valid crop
+  # - test for each commodity that demand$year has the same years as defined in the meta data and report missing years or filter years not in the meta data and report this
+  # - test for each commodity that demand$region has the same values as defined in the slot regions and report missing regions or filter regions not in the slot and report this
+  #
+  #
+  # - test dimensions of rasters perhaps
+  # theDims <- dim(theRaster)
+  # if(any(theDims[1] > 4000 | theDims[2] > 4000)) {
+  #   stop("this gridded object is too large!")
+  # }
+  # - test the crs and extent as well
 
   scene@validated <- TRUE
 

@@ -16,6 +16,7 @@ clue_run <- function(scene, mode, stepwise){
   root <- getOption("clue_path")
   thisPath <- paste0(root, "/", scene@name)
 
+  # insert code from runModel.R here, check how much this could/should be in clue_initiate.R
 
 
 }
