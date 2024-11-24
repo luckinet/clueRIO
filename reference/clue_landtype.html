@@ -44,7 +44,10 @@
 <span>  resistance <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  limit <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  suitability <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  production <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  production <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  conversion <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  neighborhood <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  preference <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -71,22 +74,35 @@ land-use type is allowed to remain in a location at most.</p></dd>
 
 
 <dt id="arg-suitability">suitability<a class="anchor" aria-label="anchor" href="#arg-suitability"></a></dt>
-<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame(1)</a></code><br> table of driver and
-coefficient of suitability. Must have names <code>driver</code> and <code>coef</code>.
-Driver names must correspond to the names defined in
+<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame(2)</a></code><br> table of driver and
+coefficient of suitability. Must have names <code>'driver'</code> and
+<code>'coef'</code>. Driver names must correspond to the names defined in
 <code><a href="clue_driver.html">clue_driver</a></code>.</p></dd>
 
 
 <dt id="arg-production">production<a class="anchor" aria-label="anchor" href="#arg-production"></a></dt>
-<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame(1)</a></code><br> table of what, with which
+<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame(3)</a></code><br> table of what, with which
 priority and how much this land type produces. Must have names
-<code>commodity</code>, <code>priority</code> and <code>amount</code>.</p></dd>
+<code>'commodity'</code>, <code>'priority'</code> and <code>'amount'</code>.</p></dd>
+
+
+<dt id="arg-conversion">conversion<a class="anchor" aria-label="anchor" href="#arg-conversion"></a></dt>
+<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame(.)</a></code><br> table of land types into
+which the land type can be converted. Must have names <code>'to'</code> and
+<code>'label'</code> and optionally one of <code>'thresh'</code>, <code>'auto'</code> or
+<code>'mask'</code>.</p></dd>
+
+
+<dt id="arg-neighborhood">neighborhood<a class="anchor" aria-label="anchor" href="#arg-neighborhood"></a></dt>
+<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame(1)</a></code><br> work in progress</p></dd>
+
+
+<dt id="arg-preference">preference<a class="anchor" aria-label="anchor" href="#arg-preference"></a></dt>
+<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame(2)</a></code><br> table of where and how
+location specific preferences are used. Must have names <code>'layer'</code> and
+<code>'weight'</code>.</p></dd>
 
 </dl></div>
-    <div class="section level2">
-    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Additional details...</p>
-    </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

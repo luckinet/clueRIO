@@ -38,7 +38,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">clue_initiate</span><span class="op">(</span><span class="va">scene</span>, clue.exe <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">clue_initiate</span><span class="op">(</span><span class="va">scene</span>, <span class="va">clue.exe</span>, modify <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -51,10 +51,16 @@ model directory.</p></dd>
 
 
 <dt id="arg-clue-exe">clue.exe<a class="anchor" aria-label="anchor" href="#arg-clue-exe"></a></dt>
-<dd><p><code><a href="https://rdrr.io/r/base/character.html" class="external-link">character(1)</a></code><br> by default, this package ships
-with the publicly available version of CLUMondo. Optionally, you can
-specify here the full path to another <em>clue.exe</em> file with which the
-model should be run.</p></dd>
+<dd><p><code><a href="https://rdrr.io/r/base/character.html" class="external-link">character(1)</a></code><br> R packages cannot contain
+executable files, such as the CLUMondo main model executable. Therefore,
+you need to download this
+<a href="https://www.environmentalgeography.nl/site/data-models/models/clumondo-model/" class="external-link">CLUMondo*.exe</a>
+from the official model website and provide the path to your local copy
+here.</p></dd>
+
+
+<dt id="arg-modify">modify<a class="anchor" aria-label="anchor" href="#arg-modify"></a></dt>
+<dd><p>description</p></dd>
 
 </dl></div>
     <div class="section level2">
