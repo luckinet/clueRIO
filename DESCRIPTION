@@ -12,7 +12,7 @@ Description: The CLUMondo model is a dynamic, spatially explicit, land use and
     file-structure required for successfully configuring and running a CLUE
     model. This acts as an interface that enables users to build and document
     scenarios based on such models quickly and in a script-based fashion.
-URL: https://github.com/luckinet/cluerio, http://ehrmanns.github.io/cluerio
+URL: https://github.com/luckinet/cluerio, http://luckinet.github.io/cluerio
 BugReports: https://github.com/luckinet/cluerio/issues
 License: GPL (>= 3)
 Encoding: UTF-8
@@ -20,20 +20,14 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports: 
-    animation,
     checkmate,
     dplyr,
-    raster,
-    readr,
+    terra,
+    sf,
     rlang,
     purrr,
     stringr,
     tibble,
-    tidyr,
-    tidyselect,
-    viridisLite,
-    visNetwork,
-    ggplot2,
     crayon,
     methods
 Suggests: 

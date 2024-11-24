@@ -47,46 +47,47 @@ devtools::install_github("luckinet/clueRIO")
 ## Examples
 
 ```{r, echo=FALSE, eval=FALSE}
+library(cluRIO); library(dplyr); library(checkmate); library(stringr); library(sf)
 # define metadata ----
-# dir <- tempdir()
-# data_dir <- paste0(system.file("test_data", package = "clueRIO", mustWork = TRUE), "/")
+dir <- tempdir()
+data_dir <- paste0(system.file("test_data", package = "clueRIO", mustWork = TRUE), "/")
 
-# lus <- c("forest", "cropland")
-# commodities <- c("crops", "trees")
-# targetCRS <- "+proj=utm +zone=48 +datum=WGS84 +units=m +no_defs"
+lus <- c("forest", "cropland")
+commodities <- c("crops", "trees")
+targetCRS <- "+proj=utm +zone=48 +datum=WGS84 +units=m +no_defs"
 
 # start project ----
-# startProject(root = dir, name = "ls2d1", start = 2000, end = 2019,
-#              landuse = lus, demands = commodities) done->clue_scene
+startProject(root = dir, name = "ls2d1", start = 2000, end = 2019,
+             landuse = lus, demands = commodities) #done->clue_scene
 
 # register gridded objects ----
-# LUS <- tibble(system = lus) %>%
-#   mutate(ID = seq_along(system)-1)
+LUS <- tibble(system = lus) |> 
+  mutate(ID = seq_along(system)-1)
 
-# regGridded(name = "landuse", dir = data_dir, pattern = "ls2d1", crs = targetCRS) done->clue_landsystems
-# setLAT(table = LUS) done->clue_landsystems
-# regGridded(name = "cropland_suit", dir = data_dir, pattern = "suitCropland", crs = targetCRS) done->clue_driver
-# regGridded(name = "forest_suit", dir = data_dir, pattern = "suitForest_year0", crs = targetCRS)
+regGridded(name = "landuse", dir = data_dir, pattern = "ls2", crs = targetCRS) #done->clue_landsystems
+setLAT(table = LUS) #done->clue_landsystems
+regGridded(name = "cropland_suit", dir = data_dir, pattern = "suitability1.tif", crs = targetCRS) #done->clue_driver
+regGridded(name = "forest_suit", dir = data_dir, pattern = "suitability2_0.tif", crs = targetCRS)
 
 # register landuse systems ----
-# regLanduse(name = "forest", resistance = 0.5) %>% done->clue_landtype
-#   setConversion(to = "cropland", label = "intensification") %>% done->clue_landtype
-#   setSuitability(const = 1, forest_suit = 1) done->clue_landtype
-# regLanduse(name = "cropland", resistance = 0.5) %>%
-#   setSuitability(const = 1, cropland_suit = 1)
+regLanduse(name = "forest", resistance = 0.5)  #done->clue_landtype
+setConversion(from = "forest", to = "cropland", label = "intensification")  #done->clue_landtype
+setSuitability(landuse = "forest", const = 1, forest_suit = 1) #done->clue_landtype
+regLanduse(name = "cropland", resistance = 0.5) 
+setSuitability(landuse = "cropland", const = 1, cropland_suit = 1)
 
 # register demand types ----
-# regCommodity(name = "crops") %>% done->clue_commodity
-  # setProduction(by = "cropland", amount = 1) done->clue_landtype
+regCommodity(name = "crops") |>  #done->clue_commodity
+  setProduction(by = "cropland", amount = 1) #done->clue_landtype
 
 # register regions ----
-# st_read(dsn = paste0(data_dir, "test_region.gpkg")) %>%
-#   regRegions(region = "region") done->clue_landsystems
+st_read(dsn = paste0(data_dir, "test_region.gpkg")) |> 
+  regRegions(region = "region") #done->clue_landsystems
 
 # register demand ----
-# tibble(year = c(2000:2019), region = "ravenholm", commodity = "crops",
-#        grown = seq(from = 4760, to = 5000, length.out = 20)) %>%
-#   regDemand(values = "grown", region = "region")  done->clue_commodity
+tibble(year = c(2000:2019), region = "ravenholm", commodity = "crops",
+       grown = seq(from = 4760, to = 5000, length.out = 20)) |> 
+  regDemand(values = "grown", region = "region")  #done->clue_commodity
 
 # check out the landuse change sequence ----
 showSequence()
@@ -165,9 +166,6 @@ minimal <- minimal |>
 
 # initiate the model
 clue_initiate(scene = minimal)
-
-# possibly check whether everything is set up properly
-# clue_validate(scene = minimal)
 
 # and finally run the model
 clue_run(scene = minimal)
