@@ -13,8 +13,7 @@ clue_run <- function(scene, mode, stepwise){
 
   assertClass(x = scene, classes = "scene")
 
-  root <- getOption("clue_path")
-  thisPath <- paste0(root, "/", scene@name)
+  root <- scene@meta$path
 
   # insert code from runModel.R here, check how much this could/should be in clue_initiate.R
 
