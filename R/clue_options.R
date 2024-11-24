@@ -24,7 +24,7 @@
 #'   numbers must be given.
 #' @param neigh [`integerish(1)`][integer]\cr Neighbourhood function (not yet
 #'   implemented): \itemize{ \item 0 = off (default), \item 1 = on in simulation
-#'   (automatically chosen on use of \code{\link{setNeighbourhood}}), \item 2 =
+#'   (automatically chosen on use of \code{setNeighbourhood}), \item 2 =
 #'   only influences calculated, no simulation}
 #' @param loc_pref [`integerish(1)`][integer]\cr
 #' @param dyn_lusmat [`integerish(1)`][integer]\cr Dynamic landuse matrix (not
@@ -64,9 +64,7 @@ clue_options <- function(iter_mode = NULL, conv1 = NULL, conv2 = NULL,
 
   opts <- getOption("clue")
 
-  params <- opts$options
-
-  iter_vars <- str_split(params[["value"]][14], pattern = "\t")[[1]]
+  iter_vars <- str_split(opts$value[14], pattern = "\t")[[1]]
   if(!is.null(iter_mode)){
     iter_vars[1] <- iter_mode
   }
@@ -82,17 +80,17 @@ clue_options <- function(iter_mode = NULL, conv1 = NULL, conv2 = NULL,
     }
     iter_vars[3] <- conv2
   }
-  params[["value"]][14] <- paste0(iter_vars, collapse = "\t")
+  opts$value[14] <- paste0(iter_vars, collapse = "\t")
 
   if(!is.null(out_type)){
     if(out_type == -1){
       out_type <- -2
     }
-    params[["value"]][17] <- out_type
+    opts$value[17] <- out_type
   }
 
   if(!is.null(rs_reg)){
-    params[["value"]][18] <- rs_reg
+    opts$value[18] <- rs_reg
   }
 
   if(!is.null(ls_hist)){
@@ -100,30 +98,29 @@ clue_options <- function(iter_mode = NULL, conv1 = NULL, conv2 = NULL,
     if(ls_hist[1] != 0){
       assertIntegerish(x = ls_hist, len = 2)
     }
-    params[["value"]][19] <- paste(ls_hist, collapse = "\t")
+    opts$value[19] <- paste(ls_hist, collapse = "\t")
   }
 
   if(!is.null(neigh)){
-    params[["value"]][20] <- neigh
+    opts$value[20] <- neigh
   }
 
   if(!is.null(dyn_lusmat)){
-    # params[["value"]][22] <- dyn_lusmat
+    # opts$value[22] <- dyn_lusmat
     message("'dynamic landuse matrix' has not yet been implemented.")
   }
 
   if(!is.null(out_write)){
-    params[["value"]][23] <- out_write
+    opts$value[23] <- out_write
   }
 
   if(!is.null(iter_param)){
     if(iter_param > 0.1 | iter_param < 0.001){
       warning("the iteration parameter (iter_param) should typically be between 0.001 and 0.1, but is ", iter_param)
     }
-    params[["value"]][24] <- iter_param
+    opts$value[24] <- iter_param
   }
 
-  opts$options <- params
 
   # store the root path in the options
   oldOptions <- options()
