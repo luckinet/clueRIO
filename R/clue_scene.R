@@ -10,13 +10,21 @@
 #' @details
 #' @return object of class \code{\link{scene}} that contains initial meta data.
 #' @examples
+#' library(sf)
+#' region <- st_read(
+#'   paste0(system.file("test_data", package = "clueRIO"),
+#'          "/test_region.gpkg"))
+#'
 #' minimal <- clue_scene(
 #'     root = paste0(tempdir(), "/ls2d1"),
 #'     name = "ls2d1",
 #'     period = c(2000, 2024),
-#'     description = "this is a minimal showcase where forest is converted to cropland to produce crops.")
+#'     regions = region,
+#'     description = "this is a minimal showcase where forest is converted to
+#'                    cropland to produce crops.")
 #' @importFrom checkmate assertCharacter assertDirectoryExists assertIntegerish
 #' @importFrom stringr str_replace_all
+#' @importFrom tibble tibble
 #' @importFrom utils packageVersion
 #' @importFrom rlang new_environment
 #' @importFrom methods new
@@ -64,16 +72,16 @@ clue_scene <- function(root, name, period, regions, description = NULL){
     write_sf(obj = regions, dsn = paste0(root, "input/regions.gpkg"), quiet = TRUE)
   }
 
-  opts <- list(tibble(var = c("ls_types_n", "regions_n", "drivers_max", "drivers_tot",
-                              "demand_types_n", "mapRows_n", "mapCols_n", "map_res",
-                              "map_xmin", "map_ymin", "ls_types", "resistance",
-                              "demand_type", "iter_vars", "years", "drivers_dyn",
-                              "out_type", "rs_reg", "ls_hist", "neigh", "loc_pref",
-                              "dyn_lusmat", "out_write", "iter_param"),
-                      value = c(NA, 1, 1, 0, NA, NA,
-                                NA, NA, NA, NA, NA, NA,
-                                NA, paste(c(0, 0.5, 1), collapse = "\t"), paste(c(period[1], period[2]), collapse = "\t"), NA, 3, 0,
-                                paste(c(1, 5), collapse = "\t"), 0, 0, 0, 1, 0.05)))
+  opts <- tibble(var = c("ls_types_n", "regions_n", "drivers_max", "drivers_tot",
+                         "demand_types_n", "mapRows_n", "mapCols_n", "map_res",
+                         "map_xmin", "map_ymin", "ls_types", "resistance",
+                         "demand_type", "iter_vars", "years", "drivers_dyn",
+                         "out_type", "rs_reg", "ls_hist", "neigh", "loc_pref",
+                         "dyn_lusmat", "out_write", "iter_param"),
+                 value = c(NA, 1, 1, 0, NA, NA,
+                           NA, NA, NA, NA, NA, NA,
+                           NA, paste(c(0, 0.5, 1), collapse = "\t"), paste(c(period[1], period[2]), collapse = "\t"), NA, 3, 0,
+                           paste(c(1, 5), collapse = "\t"), 0, 0, 0, 1, 0.05))
 
   # store the root and options in the R-options
   oldOptions <- options()
@@ -92,8 +100,7 @@ clue_scene <- function(root, name, period, regions, description = NULL){
              landsystems = tibble(),
              drivers = list(),
              landtypes = list(),
-             commodities = list(),
-             validated = FALSE)
+             commodities = list())
 
   return(out)
 }
