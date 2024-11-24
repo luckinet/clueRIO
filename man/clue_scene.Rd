@@ -26,9 +26,16 @@ object of class \code{\link{scene}} that contains initial meta data.
 Create a new CLUE scene
 }
 \examples{
+library(sf)
+region <- st_read(
+  paste0(system.file("test_data", package = "clueRIO"),
+         "/test_region.gpkg"))
+
 minimal <- clue_scene(
     root = paste0(tempdir(), "/ls2d1"),
     name = "ls2d1",
     period = c(2000, 2024),
-    description = "this is a minimal showcase where forest is converted to cropland to produce crops.")
+    regions = region,
+    description = "this is a minimal showcase where forest is converted to
+                   cropland to produce crops.")
 }

@@ -9,7 +9,7 @@ clue_mask(scene, file)
 \arguments{
 \item{scene}{description}
 
-\item{mask}{description}
+\item{file}{description}
 }
 \description{
 Set a mask to spatially restrict a model

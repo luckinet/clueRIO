@@ -50,7 +50,7 @@ numbers must be given.}
 
 \item{neigh}{\code{\link[=integer]{integerish(1)}}\cr Neighbourhood function (not yet
 implemented): \itemize{ \item 0 = off (default), \item 1 = on in simulation
-(automatically chosen on use of \code{\link{setNeighbourhood}}), \item 2 =
+(automatically chosen on use of \code{setNeighbourhood}), \item 2 =
 only influences calculated, no simulation}}
 
 \item{loc_pref}{\code{\link[=integer]{integerish(1)}}\cr}

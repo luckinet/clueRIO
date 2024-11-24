@@ -9,13 +9,13 @@ clue_landsystems(scene, file, cats = NULL, ...)
 \arguments{
 \item{scene}{description}
 
+\item{file}{description}
+
 \item{cats}{(mention that either to provide this, or set it already before in
 \code{map}).}
 
 \item{...}{additional arguments for for writing files with
 \link[terra]{writeRaster}.}
-
-\item{map}{description}
 }
 \description{
 Set the initial land systems information
