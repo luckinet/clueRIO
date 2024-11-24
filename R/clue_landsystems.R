@@ -1,7 +1,7 @@
 #' Set the initial land systems information
 #'
 #' @param scene description
-#' @param map description
+#' @param file description
 #' @param cats (mention that either to provide this, or set it already before in
 #'   \code{map}).
 #' @param ... additional arguments for for writing files with
@@ -12,7 +12,7 @@
 #' @importFrom checkmate assertClass testClass assertFileExists testNull
 #'   assertTRUE
 #' @importFrom sf write_sf
-#' @importFrom terra rast set.cats levels writeRaster
+#' @importFrom terra rast set.cats levels writeRaster xmin ymin values
 #' @export
 
 clue_landsystems <- function(scene, file, cats = NULL, ...){
@@ -20,7 +20,7 @@ clue_landsystems <- function(scene, file, cats = NULL, ...){
   assertClass(x = scene, classes = "scene")
   isRast <- testClass(x = file, classes = "SpatRaster")
 
-  root <- file.path(scene@meta$path)
+  root <- scene@meta$path
 
   # make sure it's a raster
   if(!isRast){
@@ -51,7 +51,7 @@ clue_landsystems <- function(scene, file, cats = NULL, ...){
   opts <- getOption("clue")
   opts$value[which(opts$var == "mapRows_n")] <- as.character(nrow(map))
   opts$value[which(opts$var == "mapCols_n")] <- as.character(ncol(map))
-  opts$value[which(opts$var == "map_res")] <- as.character(res(map))
+  opts$value[which(opts$var == "map_res")] <- as.character(res(map)[1])
   opts$value[which(opts$var == "map_xmin")] <- as.character(xmin(map))
   opts$value[which(opts$var == "map_ymin")] <- as.character(ymin(map))
   options(clue = opts)

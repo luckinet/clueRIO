@@ -1,13 +1,13 @@
 #' Set a mask to spatially restrict a model
 #'
 #' @param scene description
-#' @param mask description
+#' @param file description
 #' @details
 #' @return
 #' @examples
 #' @importFrom checkmate assertClass testClass assertFileExists
 #' @importFrom sf write_sf
-#' @importFrom terra rast writeRaster res ext crs
+#' @importFrom terra rast writeRaster res ext crs values
 #' @export
 
 clue_mask <- function(scene, file){
@@ -15,7 +15,7 @@ clue_mask <- function(scene, file){
   assertClass(x = scene, classes = "scene")
   isRast <- testClass(x = file, classes = "SpatRaster")
 
-  root <- file.path(scene@meta$path)
+  root <- scene@meta$path
 
   assertFileExists(x = paste0(root, "input/landsystems.tif"), access = "rw")
   map <- rast(x = paste0(root, "input/landsystems.tif"))

@@ -20,7 +20,7 @@ clue_driver <- function(scene, file, name = NULL, ...){
   assertCharacter(x = name, len = 1, any.missing = FALSE, null.ok = TRUE)
   isRast <- testClass(x = file, classes = "SpatRaster")
 
-  root <- file.path(scene@meta$path)
+  root <- scene@meta$path
 
   # make sure it's a raster
   if(!isRast){
