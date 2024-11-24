@@ -17,8 +17,7 @@ scene <- setClass(Class = "scene",
                             landsystems = "data.frame",
                             drivers = "list",
                             landtypes = "list",
-                            commodities = "list",
-                            validated = "logical")
+                            commodities = "list")
 )
 
 setValidity("scene", function(object){
@@ -103,14 +102,6 @@ setValidity("scene", function(object){
       if(!is.list(object@drivers)){
         errors <- c(errors, "'schema$drivers' must be a list.")
       }
-    }
-  }
-
-  if(!.hasSlot(object = object, name = "validated")){
-    errors <- c(errors, "the schema does not have a slot named 'validated'.")
-  } else {
-    if(!is.logical(object@validated)){
-      errors <- c(errors, "the slot 'validated' is not a logical value.")
     }
   }
 
