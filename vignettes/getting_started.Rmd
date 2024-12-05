@@ -97,7 +97,7 @@ minimal <- minimal |>
   clue_landtype(name = "cropland", resistance = 0.5,
                 suitability = tibble(driver = c("const", "cropland_suit"),
                                      beta = c(1, 1)),
-                production = tibble(goods = "crops", 
+                production = tibble(name = "crops", 
                                     amount = 1, priority = 1))
 
 
