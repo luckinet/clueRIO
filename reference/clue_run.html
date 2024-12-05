@@ -38,7 +38,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">clue_run</span><span class="op">(</span><span class="va">scene</span>, <span class="va">mode</span>, <span class="va">stepwise</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">clue_run</span><span class="op">(</span><span class="va">scene</span>, <span class="va">clue.exe</span>, <span class="va">mode</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -49,14 +49,24 @@
 <dd><p>description</p></dd>
 
 
+<dt id="arg-clue-exe">clue.exe<a class="anchor" aria-label="anchor" href="#arg-clue-exe"></a></dt>
+<dd><p><code><a href="https://rdrr.io/r/base/character.html" class="external-link">character(1)</a></code><br> R packages cannot contain
+executable files, such as the CLUMondo main model executable. Therefore,
+you need to download this
+<a href="https://www.environmentalgeography.nl/site/data-models/models/clumondo-model/" class="external-link">CLUMondo*.exe</a>
+from the official model website and provide the path to your local copy
+here.</p></dd>
+
+
 <dt id="arg-mode">mode<a class="anchor" aria-label="anchor" href="#arg-mode"></a></dt>
-<dd><p>description</p></dd>
-
-
-<dt id="arg-stepwise">stepwise<a class="anchor" aria-label="anchor" href="#arg-stepwise"></a></dt>
-<dd><p>description</p></dd>
+<dd><p><code><a href="https://rdrr.io/r/base/integer.html" class="external-link">integerish(1)</a></code><br> the model mode.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>no return value, called for the side-effect of calling <code>scene</code>
+and running the CLUMondo model.</p>
+    </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Additional details...</p>

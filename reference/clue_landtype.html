@@ -42,7 +42,6 @@
 <span>  <span class="va">scene</span>,</span>
 <span>  <span class="va">name</span>,</span>
 <span>  resistance <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  limit <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  suitability <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  production <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  conversion <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -68,39 +67,37 @@
 resistance to land change.</p></dd>
 
 
-<dt id="arg-limit">limit<a class="anchor" aria-label="anchor" href="#arg-limit"></a></dt>
-<dd><p><code><a href="https://rdrr.io/r/base/integer.html" class="external-link">integerish(1)</a></code><br> the number of time steps a
-land-use type is allowed to remain in a location at most.</p></dd>
-
-
 <dt id="arg-suitability">suitability<a class="anchor" aria-label="anchor" href="#arg-suitability"></a></dt>
-<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame(2)</a></code><br> table of driver and
-coefficient of suitability. Must have names <code>'driver'</code> and
-<code>'coef'</code>. Driver names must correspond to the names defined in
-<code><a href="clue_driver.html">clue_driver</a></code>.</p></dd>
+<dd><p><code><a href="https://rdrr.io/r/base/list.html" class="external-link">list(.)</a></code><br> list of the result of regression
+analysis. Includes the constant (<em>beta_0</em>) and as many drivers and
+their beta coefficient as there are (<em>beta_1</em>, <em>beta_2</em>, ...).
+Driver names must correspond to the names defined in
+<code><a href="clue_gridded.html">clue_gridded</a></code>. Each land type must have at least one
+suitability driver (with <code>const = 1</code>).</p></dd>
 
 
 <dt id="arg-production">production<a class="anchor" aria-label="anchor" href="#arg-production"></a></dt>
-<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame(3)</a></code><br> table of what, with which
-priority and how much this land type produces. Must have names
-<code>'commodity'</code>, <code>'priority'</code> and <code>'amount'</code>.</p></dd>
+<dd><p><code><a href="https://rdrr.io/r/base/list.html" class="external-link">list(.)</a></code><br> optionally, list of services produced
+by this land type. Each list-item is a list itself, its name the service
+produced and the values of the list specify the <code>priority</code> and
+<code>amount</code> of production.</p></dd>
 
 
 <dt id="arg-conversion">conversion<a class="anchor" aria-label="anchor" href="#arg-conversion"></a></dt>
-<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame(.)</a></code><br> table of land types into
-which the land type can be converted. Must have names <code>'to'</code> and
-<code>'label'</code> and optionally one of <code>'thresh'</code>, <code>'auto'</code> or
+<dd><p><code><a href="https://rdrr.io/r/base/list.html" class="external-link">list(.)</a></code><br> optionally, list of land types into
+which this land type can be converted. Each list-item is a list itself, its
+name the land type into which the focal land type can be converted and the
+values of the list specify the details of conversion. Must have a value for
+<code>'label'</code> and optionally one of <code>min</code>, <code>max</code>,<code>auto</code> or
 <code>'mask'</code>.</p></dd>
 
 
 <dt id="arg-neighborhood">neighborhood<a class="anchor" aria-label="anchor" href="#arg-neighborhood"></a></dt>
-<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame(1)</a></code><br> work in progress</p></dd>
+<dd><p><code><a href="https://rdrr.io/r/base/list.html" class="external-link">list(1)</a></code><br> work in progress</p></dd>
 
 
 <dt id="arg-preference">preference<a class="anchor" aria-label="anchor" href="#arg-preference"></a></dt>
-<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame(2)</a></code><br> table of where and how
-location specific preferences are used. Must have names <code>'layer'</code> and
-<code>'weight'</code>.</p></dd>
+<dd><p><code><a href="https://rdrr.io/r/base/list.html" class="external-link">list(2)</a></code><br> work in progress</p></dd>
 
 </dl></div>
 

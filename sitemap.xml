@@ -1,17 +1,19 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>http://ehrmanns.github.io/cluerio/404.html</loc></url>
 <url><loc>http://ehrmanns.github.io/cluerio/LICENSE.html</loc></url>
+<url><loc>http://ehrmanns.github.io/cluerio/articles/index.html</loc></url>
+<url><loc>http://ehrmanns.github.io/cluerio/articles/use_cases.html</loc></url>
 <url><loc>http://ehrmanns.github.io/cluerio/authors.html</loc></url>
 <url><loc>http://ehrmanns.github.io/cluerio/index.html</loc></url>
 <url><loc>http://ehrmanns.github.io/cluerio/news/index.html</loc></url>
 <url><loc>http://ehrmanns.github.io/cluerio/reference/clueRIO-package.html</loc></url>
-<url><loc>http://ehrmanns.github.io/cluerio/reference/clue_commodity.html</loc></url>
-<url><loc>http://ehrmanns.github.io/cluerio/reference/clue_driver.html</loc></url>
+<url><loc>http://ehrmanns.github.io/cluerio/reference/clue_backup.html</loc></url>
 <url><loc>http://ehrmanns.github.io/cluerio/reference/clue_example.html</loc></url>
+<url><loc>http://ehrmanns.github.io/cluerio/reference/clue_goods.html</loc></url>
+<url><loc>http://ehrmanns.github.io/cluerio/reference/clue_gridded.html</loc></url>
 <url><loc>http://ehrmanns.github.io/cluerio/reference/clue_initiate.html</loc></url>
-<url><loc>http://ehrmanns.github.io/cluerio/reference/clue_landsystems.html</loc></url>
 <url><loc>http://ehrmanns.github.io/cluerio/reference/clue_landtype.html</loc></url>
-<url><loc>http://ehrmanns.github.io/cluerio/reference/clue_mask.html</loc></url>
+<url><loc>http://ehrmanns.github.io/cluerio/reference/clue_modify.html</loc></url>
 <url><loc>http://ehrmanns.github.io/cluerio/reference/clue_options.html</loc></url>
 <url><loc>http://ehrmanns.github.io/cluerio/reference/clue_run.html</loc></url>
 <url><loc>http://ehrmanns.github.io/cluerio/reference/clue_scene.html</loc></url>
