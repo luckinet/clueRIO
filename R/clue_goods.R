@@ -1,4 +1,4 @@
-#' Set commodities and their attributes
+#' Set goods or services and their attributes
 #'
 #' @param scene description
 #' @param name [`character(1)`][character]\cr name of the commodity.
@@ -18,17 +18,22 @@
 #'   assertDataFrame assertNames
 #' @export
 
-clue_commodity <- function(scene, name, excluded = NULL, match = "exact",
-                           demand = NULL){
+clue_goods <- function(scene, name, excluded = NULL, match = "exact",
+                       demand = NULL){
 
   assertClass(x = scene, classes = "scene")
   assertCharacter(x = name, len = 1, any.missing = FALSE)
   assertCharacter(x = excluded, any.missing = FALSE, null.ok = TRUE)
   assertChoice(x = match, choices = c("exact", "minimum", "maximum"))
   assertDataFrame(x = demand, ncols = 3, all.missing = FALSE, null.ok = TRUE)
-  if(!is.null(demand)){
-    assertNames(x = names(demand), permutation.of = c("year", "region", "amount"))
+
+  if(is.null(excluded)){
+    excluded <- tibble(type = NA_character_)
+  } else{
+    excluded <- tibble(type = excluded)
   }
+  excluded <- excluded |>
+    nest()
 
   # update demand type
   if(match == "exact"){
@@ -39,11 +44,17 @@ clue_commodity <- function(scene, name, excluded = NULL, match = "exact",
     dt <- 101
   }
 
+  if(!is.null(demand)){
+    assertNames(x = names(demand), permutation.of = c("year", "region", "amount"))
+  }
+  demand <- demand |>
+    nest()
+
   temp <- list(match = as.character(dt),
                excluded = excluded,
                demand = demand)
 
-  scene@commodities[[name]] <- temp
+  scene@goods[[name]] <- temp
 
   return(scene)
 }
