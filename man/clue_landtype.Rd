@@ -7,8 +7,8 @@
 clue_landtype(
   scene,
   name,
-  resistance = NULL,
-  suitability = NULL,
+  resistance,
+  suitability,
   production = NULL,
   conversion = NULL,
   neighborhood = NULL,
@@ -23,33 +23,79 @@ clue_landtype(
 \item{resistance}{\code{\link[=numeric]{numeric(1)}}\cr the relative conversion
 resistance to land change.}
 
-\item{suitability}{\code{\link[=data.frame]{data.frame(2)}}\cr obligatory table of the
-result of regression analysis. At least two rows. Includes the constant
+\item{suitability}{\code{\link{data.frame}}\cr \emph{obligatory} table of
+the result of regression analysis. At least two rows. Includes the constant
 (\emph{beta_0}) and as many drivers and their beta coefficient as there are
 in the regression formula (\emph{beta_1}, \emph{beta_2}, ...). Must have
-the column \code{const} and at least one other column with the name of the
-respective suitability driver. Driver names must correspond to names of
-gridded items of \code{type = "driver"} as defined in
+the columns \code{driver} and \code{beta}. Driver names must correspond to
+names of gridded items of \code{type = "driver"} as defined in
 \code{\link{clue_gridded}}.}
 
-\item{production}{\code{\link[=data.frame]{data.frame(3)}}\cr optional table of goods
-and services produced by this land type. Each row contains one good. Must
-have column \code{goods} for its name, \code{amount} of production and
-\code{priority}.}
+\item{production}{\code{\link{data.frame}}\cr optional table of goods and
+services produced by this land type. Each row contains one good. Must have
+columns \itemize{
+\item \code{name}: the name of the good or service,
+\item \code{amount}: how much each cell in the map produces and
+\item \code{priority}: .
+}}
 
-\item{conversion}{\code{\link[=data.frame]{data.frame(.)}}\cr optional table of land
-types into which this land type can be converted. Each row contains one
-type into which it can be converted. Must have a column \code{to} and
-\code{label} and for the details of conversion, optionally one of
-\code{min}, \code{max},\code{auto} or \code{mask}.}
+\item{conversion}{\code{\link{data.frame}}\cr optional table of land types
+into which this land type can be converted. Each row contains one type into
+which it can be converted. Must have a columns \itemize{
+\item \code{to}: name of the land type into which to convert and
+\item \code{label}: name of the conversion process,
+} and optionally, for the details of conversion one of \itemize{
+\item \code{min}: number of time-steps that need to pass until the
+conversion can take place,
+\item \code{max}: number of time-steps within which the conversion can
+take place,
+\item \code{auto}: number of time-steps after which a conversion must take
+place (from local dynamics and not to fulfill demand of a good or
+service) or
+\item \code{mask}: name of a gridded item (with values 0, 1 and NA/-9999)
+that indicates with value 1 where conversion can take place and with
+0, where they cannot take place.
+}}
 
-\item{neighborhood}{\code{\link[=data.frame]{data.frame(.)}}\cr work in progress}
+\item{neighborhood}{\code{\link{data.frame}}\cr work in progress}
 
-\item{preference}{\code{\link[=data.frame]{data.frame(2)}}\cr optional table of
-suitability preferences. One row only. Must have columns \code{layer} and
+\item{preference}{\code{\link{data.frame}}\cr optional table of suitability
+preferences. One row only. Must have columns \code{layer} and
 \code{weight}. Layer names must correspond to names of gridded items of
 \code{type = "preference"} as defined in \code{\link{clue_gridded}}.}
 }
 \description{
 Set land types and their attributes
 }
+\section{Suitability}{
+
+}
+
+\section{Production}{
+
+}
+
+\section{Conversion}{
+
+
+Conversions are implicitly always set from a focal class to itself. By
+default, this conversion is allowed indefinitely and one does not have to
+set it. However, if one wants to limit the persistence of a land type to,
+e.g., 5 years in a row, one needs to specify
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{clue_landtype(...,
+              name = "it",
+              conversion = tibble(to = "it",
+                                  label = "limit_self",
+                                  max = 5))
+}\if{html}{\out{</div>}}
+}
+
+\section{Neighborhood}{
+
+}
+
+\section{Preference}{
+
+}
+

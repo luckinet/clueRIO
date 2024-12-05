@@ -4,29 +4,62 @@
 #' @param name [`character(1)`][character]\cr name of the land type.
 #' @param resistance [`numeric(1)`][numeric]\cr the relative conversion
 #'   resistance to land change.
-#' @param suitability [`data.frame(2)`][data.frame]\cr obligatory table of the
-#'   result of regression analysis. At least two rows. Includes the constant
+#' @param suitability [`data.frame`][data.frame]\cr \emph{obligatory} table of
+#'   the result of regression analysis. At least two rows. Includes the constant
 #'   (\emph{beta_0}) and as many drivers and their beta coefficient as there are
 #'   in the regression formula (\emph{beta_1}, \emph{beta_2}, ...). Must have
-#'   the column \code{const} and at least one other column with the name of the
-#'   respective suitability driver. Driver names must correspond to names of
-#'   gridded items of \code{type = "driver"} as defined in
+#'   the columns \code{driver} and \code{beta}. Driver names must correspond to
+#'   names of gridded items of \code{type = "driver"} as defined in
 #'   \code{\link{clue_gridded}}.
-#' @param production [`data.frame(3)`][data.frame]\cr optional table of goods
-#'   and services produced by this land type. Each row contains one good. Must
-#'   have column \code{goods} for its name, \code{amount} of production and
-#'   \code{priority}.
-#' @param conversion [`data.frame(.)`][data.frame]\cr optional table of land
-#'   types into which this land type can be converted. Each row contains one
-#'   type into which it can be converted. Must have a column \code{to} and
-#'   \code{label} and for the details of conversion, optionally one of
-#'   \code{min}, \code{max},\code{auto} or \code{mask}.
-#' @param neighborhood [`data.frame(.)`][data.frame]\cr work in progress
-#' @param preference [`data.frame(2)`][data.frame]\cr optional table of
-#'   suitability preferences. One row only. Must have columns \code{layer} and
+#' @param production [`data.frame`][data.frame]\cr optional table of goods and
+#'   services produced by this land type. Each row contains one good. Must have
+#'   columns \itemize{
+#'    \item \code{name}: the name of the good or service,
+#'    \item \code{amount}: how much each cell in the map produces and
+#'    \item \code{priority}: .
+#'   }
+#' @param conversion [`data.frame`][data.frame]\cr optional table of land types
+#'   into which this land type can be converted. Each row contains one type into
+#'   which it can be converted. Must have a columns \itemize{
+#'    \item \code{to}: name of the land type into which to convert and
+#'    \item \code{label}: name of the conversion process,
+#'   } and optionally, for the details of conversion one of \itemize{
+#'    \item \code{min}: number of time-steps that need to pass until the
+#'          conversion can take place,
+#'    \item \code{max}: number of time-steps within which the conversion can
+#'          take place,
+#'    \item \code{auto}: number of time-steps after which a conversion must take
+#'          place (from local dynamics and not to fulfill demand of a good or
+#'          service) or
+#'    \item \code{mask}: name of a gridded item (with values 0, 1 and NA/-9999)
+#'          that indicates with value 1 where conversion can take place and with
+#'          0, where they cannot take place.
+#'   }
+#' @param neighborhood [`data.frame`][data.frame]\cr work in progress
+#' @param preference [`data.frame`][data.frame]\cr optional table of suitability
+#'   preferences. One row only. Must have columns \code{layer} and
 #'   \code{weight}. Layer names must correspond to names of gridded items of
 #'   \code{type = "preference"} as defined in \code{\link{clue_gridded}}.
-#' @details
+#' @section Suitability:
+#' @section Production:
+#' @section Conversion:
+#'
+#'   Conversions are implicitly always set from a focal class to itself. By
+#'   default, this conversion is allowed indefinitely and one does not have to
+#'   set it. However, if one wants to limit the persistence of a land type to,
+#'   e.g., 5 years in a row, one needs to specify
+#'
+#'   ```
+#'   clue_landtype(...,
+#'                 name = "it",
+#'                 conversion = tibble(to = "it",
+#'                                     label = "limit_self",
+#'                                     max = 5))
+#'    ```
+#'
+#'
+#' @section Neighborhood:
+#' @section Preference:
 #' @return
 #' @examples
 #' @importFrom checkmate assertClass assertCharacter assertDataFrame assertList
@@ -37,7 +70,7 @@
 #' @importFrom rlang sym
 #' @export
 
-clue_landtype <- function(scene, name, resistance = NULL, suitability = NULL,
+clue_landtype <- function(scene, name, resistance, suitability,
                           production = NULL, conversion = NULL,
                           neighborhood = NULL, preference = NULL){
 
@@ -63,9 +96,9 @@ clue_landtype <- function(scene, name, resistance = NULL, suitability = NULL,
   # handle production ----
   #
   if(!is.null(production)){
-    assertNames(x = names(production), must.include = c("goods", "amount", "priority"))
+    assertNames(x = names(production), must.include = c("name", "amount", "priority"))
   } else {
-    production <- tibble(goods = NA_character_, amount = NA_real_, priority = NA_real_)
+    production <- tibble(name = NA_character_, amount = NA_real_, priority = NA_real_)
   }
 
   # handle conversion ----
@@ -82,8 +115,8 @@ clue_landtype <- function(scene, name, resistance = NULL, suitability = NULL,
       pivot_longer(cols = c(-to, -label), names_to = "conv", values_to = "values") |>
       filter(!is.na(values)) |>
       mutate(value = suppressWarnings(case_when(
-        conv == "min" ~ as.character(-100 - as.integer(values)),
-        conv == "max" ~ as.character(100 + as.integer(values)),
+        conv == "min" ~ as.character(100 + as.integer(values)),
+        conv == "max" ~ as.character(-100 - as.integer(values)),
         conv == "auto" ~ as.character(1000 + as.integer(values)),
         conv == "mask" ~ values,
         .default = "1"
