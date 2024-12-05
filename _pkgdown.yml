@@ -11,8 +11,6 @@ development:
 
 navbar:
   left:
-    - text: "Get Started"
-      href: articles/cluerio.html
     - text: "Use cases"
       href: articles/use_cases.html
     - text: "Reference"

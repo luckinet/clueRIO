@@ -797,7 +797,3 @@ model <- ""
 
 ```
 
-
-# Outro
-
-If you have any questions, issue reports or (kind) comments, please leave them below!
