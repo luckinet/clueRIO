@@ -19,11 +19,10 @@ Please check the above link for more information on the CLUMondo
 model. The most up-to-date version is typically a command line version.
 This R-package has the aim to simplify specifying all files needed to
 successfully run that version. Please make sure to reference not only this
-R-package, but
-also the references on the website and in particular \emph{Van Asselen, S.,
-Verburg, P.H., 2013. Land cover change or land-use intensification:
-simulating land system change with a global-scale land change model. Global
-Change Biology 19, 3648–3667}.
+R-package, but also the references on the website and in particular
+\emph{"Van Asselen, S., Verburg, P.H., 2013. Land cover change or land-use
+intensification: simulating land system change with a global-scale land
+change model. Global Change Biology 19, 3648–3667"}.
 }
 \seealso{
 \itemize{ \item Github project:

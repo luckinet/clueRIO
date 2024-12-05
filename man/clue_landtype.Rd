@@ -8,7 +8,6 @@ clue_landtype(
   scene,
   name,
   resistance = NULL,
-  limit = NULL,
   suitability = NULL,
   production = NULL,
   conversion = NULL,
@@ -24,28 +23,28 @@ clue_landtype(
 \item{resistance}{\code{\link[=numeric]{numeric(1)}}\cr the relative conversion
 resistance to land change.}
 
-\item{limit}{\code{\link[=integer]{integerish(1)}}\cr the number of time steps a
-land-use type is allowed to remain in a location at most.}
+\item{suitability}{\code{\link[=list]{list(.)}}\cr list of the result of regression
+analysis. Includes the constant (\emph{beta_0}) and as many drivers and
+their beta coefficient as there are (\emph{beta_1}, \emph{beta_2}, ...).
+Driver names must correspond to the names defined in
+\code{\link{clue_gridded}}. Each land type must have at least one
+suitability driver (with \code{const = 1}).}
 
-\item{suitability}{\code{\link[=data.frame]{data.frame(2)}}\cr table of driver and
-coefficient of suitability. Must have names \code{'driver'} and
-\code{'coef'}. Driver names must correspond to the names defined in
-\code{\link{clue_driver}}.}
+\item{production}{\code{\link[=list]{list(.)}}\cr optionally, list of services produced
+by this land type. Each list-item is a list itself, its name the service
+produced and the values of the list specify the \code{priority} and
+\code{amount} of production.}
 
-\item{production}{\code{\link[=data.frame]{data.frame(3)}}\cr table of what, with which
-priority and how much this land type produces. Must have names
-\code{'commodity'}, \code{'priority'} and \code{'amount'}.}
-
-\item{conversion}{\code{\link[=data.frame]{data.frame(.)}}\cr table of land types into
-which the land type can be converted. Must have names \code{'to'} and
-\code{'label'} and optionally one of \code{'thresh'}, \code{'auto'} or
+\item{conversion}{\code{\link[=list]{list(.)}}\cr optionally, list of land types into
+which this land type can be converted. Each list-item is a list itself, its
+name the land type into which the focal land type can be converted and the
+values of the list specify the details of conversion. Must have a value for
+\code{'label'} and optionally one of \code{min}, \code{max},\code{auto} or
 \code{'mask'}.}
 
-\item{neighborhood}{\code{\link[=data.frame]{data.frame(1)}}\cr work in progress}
+\item{neighborhood}{\code{\link[=list]{list(1)}}\cr work in progress}
 
-\item{preference}{\code{\link[=data.frame]{data.frame(2)}}\cr table of where and how
-location specific preferences are used. Must have names \code{'layer'} and
-\code{'weight'}.}
+\item{preference}{\code{\link[=list]{list(2)}}\cr work in progress}
 }
 \description{
 Set land types and their attributes

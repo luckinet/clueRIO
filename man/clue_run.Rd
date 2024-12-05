@@ -4,14 +4,23 @@
 \alias{clue_run}
 \title{Run the model}
 \usage{
-clue_run(scene, mode, stepwise)
+clue_run(scene, clue.exe, mode)
 }
 \arguments{
 \item{scene}{description}
 
-\item{mode}{description}
+\item{clue.exe}{\code{\link[=character]{character(1)}}\cr R packages cannot contain
+executable files, such as the CLUMondo main model executable. Therefore,
+you need to download this
+\href{https://www.environmentalgeography.nl/site/data-models/models/clumondo-model/}{CLUMondo*.exe}
+from the official model website and provide the path to your local copy
+here.}
 
-\item{stepwise}{description}
+\item{mode}{\code{\link[=integer]{integerish(1)}}\cr the model mode.}
+}
+\value{
+no return value, called for the side-effect of calling \code{scene}
+and running the CLUMondo model.
 }
 \description{
 Run the model

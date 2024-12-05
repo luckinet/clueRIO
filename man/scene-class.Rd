@@ -17,11 +17,9 @@ A \code{scene} stores metadata and configuration of a CLUE model.
 
 \item{\code{landtypes}}{\code{\link[=list]{list(.)}}\cr}
 
-\item{\code{drivers}}{\code{\link[=list]{list(.)}}\cr}
+\item{\code{grids}}{\code{\link[=list]{list(.)}}\cr}
 
-\item{\code{commodities}}{\code{\link[=list]{list(.)}}\cr}
-
-\item{\code{landsystems}}{\code{\link[=data.frame]{data.frame(.)}}\cr}
+\item{\code{goods}}{\code{\link[=list]{list(.)}}\cr}
 
 \item{\code{validated}}{\code{\link[=logical]{logical(1)}}\cr}
 }}
