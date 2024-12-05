@@ -44,10 +44,6 @@ clue_initiate <- function(scene, module = NULL){
   # list("directory" = "ok") |>
   #   .printOut()
 
-  # diff2 <- function(x){
-  #   c(0, diff(x))
-  # }
-
 
   # local variables ----
   #
@@ -90,7 +86,7 @@ clue_initiate <- function(scene, module = NULL){
 
   # build output files ----
   #
-  ## demand.in ----
+  ## demand.in1 ----
   .demand <- tbl_demand |>
     filter(year >= scene@period[1] & year <= scene@period[2]) |>
     select(-region, -year) |>
@@ -141,7 +137,15 @@ clue_initiate <- function(scene, module = NULL){
   ## alloc2.reg ----
   #
   # outAlloc2 <- neigh <- opts_old$tables$alloc2
-  #
+
+  # outAlloc2 <- opts$tables$alloc2
+  # assertTibble(x = outAlloc2, nrows = length(opts$attributes$landuse$system))
+  # assertNames(x = names(outAlloc2), must.include = c("system", "const", "alloc", "neighmat"))
+  # outNeighmat <- paste0(paste0(outAlloc2$weight, collapse = " "), "\n\n", paste(outAlloc2$neighmat, collapse = "\n"))
+  # outAlloc2 <- paste(outAlloc2$alloc, collapse = "\n")
+  # writeLines(outAlloc2, paste0(opts$path$model, "/alloc2.reg"))
+  # writeLines(outNeighmat, paste0(opts$path$model, "/neighmat.txt"))
+
   # paste(outAlloc2$alloc, collapse = "\n") |>
   #   writeLines(paste0(root, "alloc2.reg"))
 
@@ -157,24 +161,24 @@ clue_initiate <- function(scene, module = NULL){
   .production <- tbl_landtypes |>
     select(type, production) |>
     unnest(cols = production) |> # also test here when there are more than one good per type
-    complete(type, goods,
+    complete(type, name,
              fill = list(priority = 0,
                          amount = 0)) |>
     arrange(match(type, .landtypes)) |>
-    filter(!is.na(goods))
+    filter(!is.na(name))
 
   .exclusion <- tbl_goods |>
-    select(goods, excluded) |>
+    select(name, excluded) |>
     unnest(cols = excluded) |>
     unnest(cols = data) |>
     mutate(exclude = TRUE)
 
   .lusconv <- .production |>
     select(-amount) |>
-    left_join(.exclusion, by = c("type", "goods")) |>
+    left_join(.exclusion, by = c("type", "name")) |>
     mutate(priority = if_else(!is.na(exclude), -1, priority),
            exclude = NULL) |>
-    pivot_wider(names_from = goods, values_from = priority) |>
+    pivot_wider(names_from = name, values_from = priority) |>
     select(all_of(.goods))
 
   write_delim(x = .lusconv, col_names = FALSE,
@@ -184,7 +188,7 @@ clue_initiate <- function(scene, module = NULL){
   ## lusmatrix.txt ----
   .lusmatrix <- .production |>
     select(-priority) |>
-    pivot_wider(names_from = goods, values_from = amount) |>
+    pivot_wider(names_from = name, values_from = amount) |>
     select(all_of(.goods))
 
   write_delim(x = .lusmatrix, col_names = FALSE,
