@@ -57,7 +57,7 @@ There are various tables and raster layers used throughout this tutorial.
 ```
 
 
-# minimal example
+# minimal example (ls2d1)
 
 In a system with cropland and forest, convert forest to cropland at a rate required only by the demand of crops.
 
@@ -66,7 +66,7 @@ In a system with cropland and forest, convert forest to cropland at a rate requi
 
 model <- "ls2d1"
 
-minimal <- clue_scene(
+scene <- clue_scene(
   root = paste0(tempdir(), "/", model), 
   name = model, 
   period = c(2000, 2024),
@@ -98,10 +98,10 @@ minimal <- clue_scene(
                              amount = seq(from = 4760, to = 5000, length.out = 25))) |> 
   clue_initiate()
 
-clue_run(scene = minimal, clue.exe = ...)
+clue_run(scene = scene, clue.exe = ...)
 ```
 
-## minimal example, stepwise
+## ls2d1, stepwise
 
 In a system with cropland and forest, convert forest to cropland at a rate required only by the demand of crops. Here, each year is calculated step by step (allowing further modules to interact with the input data of each new time step).
 
@@ -110,12 +110,12 @@ In a system with cropland and forest, convert forest to cropland at a rate requi
 
 model <- "ls2d1_step"
 
-minimal <- clue_scene(
+scene <- clue_scene(
   root = paste0(tempdir(), "/", model), 
   name = model, 
   period = c(2000, 2024),
   regions = paste0(data, "/test_region.gpkg"),
-  description = "this is a minimal showcase where forest is converted to cropland to produce crops.") |> 
+  description = "") |> 
   clue_gridded(file = paste0(data, "/ls2.tif"),
                type = "initial") |> 
   clue_gridded(file = paste0(data, "/suitability1.tif"), 
@@ -142,10 +142,10 @@ minimal <- clue_scene(
                              amount = seq(from = 4760, to = 5000, length.out = 25))) |> 
   clue_initiate(module = "stepwise")
 
-clue_run(scene = minimal, clue.exe = ...)
+clue_run(scene = scene, clue.exe = ...)
 ```
 
-## minimal example, with mask
+## ls2d1, with mask
 
 There are various ways in which a mask can be employed.
 
@@ -390,7 +390,7 @@ model <- "ls2d1_limit_prot"
 
 
 
-## minimal example, 
+## ls2d1, 
 
 ...
 
@@ -407,7 +407,7 @@ model <- "ls2d1_cropRot"
 
 ```
 
-## minimal example, dynamic driver
+## ls2d1, dynamic driver
 
 This model has yearly suitability layers (i.e., dynamic drivers).
 
@@ -480,7 +480,7 @@ model <- "ls2d1_dynamic"
 
 ```
 
-## minimal example, location specific preferences
+## ls2d1, location specific preferences
 
 ...
 
@@ -489,78 +489,48 @@ model <- "ls2d1_dynamic"
 
 model <- "ls2d1_preferences"
 
-```
+scene <- clue_scene(
+  root = paste0(tempdir(), "/", model), 
+  name = model, 
+  period = c(2000, 2024),
+  regions = paste0(data, "/test_region.gpkg"),
+  description = "") |> 
+  clue_gridded(file = paste0(data, "/ls2.tif"),
+               type = "initial") |> 
+  clue_gridded(file = paste0(data, "/suitability1.tif"), 
+               type = "driver", 
+               name = "cropland_suit") |> 
+  clue_gridded(file = paste0(data, "/suitability2_0.tif"),
+               type = "driver", 
+               name = "forest_suit") |> 
+  clue_gridded(file = paste0(data, "/preference1.tif"),
+               type = "preference", 
+               name = "pref_forest") |> 
+  clue_landtype(name = "forest", 
+                resistance = 0.5,
+                suitability = tibble(driver = c("const", "forest_suit"),
+                                     beta = c(1, 1)),
+                conversion = tibble(to = "cropland", 
+                                    label = "intensification"),
+                preference = tibble(layer = "pref_forest", weight = 1)) |> 
+  clue_landtype(name = "cropland", 
+                resistance = 0.5,
+                suitability = tibble(driver = c("const", "cropland_suit"),
+                                     beta = c(1, 1)),
+                production = tibble(goods = "crops", 
+                                    amount = 1, priority = 1)) |> 
+  clue_goods(name = "crops", 
+             demand = tibble(year = c(2000:2024), 
+                             region = "ravenholm", 
+                             amount = seq(from = 4760, to = 5000, length.out = 25))) |> 
+  clue_initiate()
 
-```{r}
-#| eval: false
-#| echo: false
+clue_run(scene = scene, clue.exe = ...)
 
-# clue_gridded(file = paste0(data, "/"), 
-#              type = "preference", name = "")
-
-#   # define metadata ----
-#   # dir <- tempdir()
-#   # dir <- "/home/se87kuhe/idiv-mount/groups/MAS/01_data/LUCKINet/allocation"
-#   dir <- "/media/se87kuhe/external/r-dev/luckiCLU_misc/testing/"
-#   data_dir <- paste0(system.file("test_datasets", package = "luckiCLU", mustWork = TRUE), "/")
-#
-#   lus <- c("forest", "cropland")
-#   commodities <- c("crops", "trees")
-#   targetCRS <- "+proj=utm +zone=48 +datum=WGS84 +units=m +no_defs"
-#
-#   # start project ----
-#   startProject(root = dir, name = "2lus_1demand_locSpec", start = 2000, end = 2019,
-#                landuse = lus, demands = commodities)
-#
-#   # register gridded objects ----
-#   LUS <- tibble(system = lus) %>%
-#     mutate(ID = seq_along(system)-1)
-#
-#   regGridded(name = "landuse", dir = data_dir, pattern = "ls_2lus", crs = targetCRS)
-#   setLAT(table = LUS)
-#   regGridded(name = "cropland_suit", dir = data_dir, pattern = "suitCropland", crs = targetCRS)
-#   regGridded(name = "forest_suit", dir = data_dir, pattern = "suitForest_year0", crs = targetCRS)
-#   regGridded(name = "pref_wald", dir = data_dir, pattern = "preferences1", crs = targetCRS)
-#
-#   # register landuse systems ----
-#   regLanduse(name = "forest", resistance = 0.5) %>%
-#     setSuitability(const = 1, forest_suit = 1) %>%
-#     setPreference(layer = "pref_wald", weight = 1) %>%
-#     setConversion(to = "cropland", label = "Intensivierung")
-#   regLanduse(name = "cropland", resistance = 0.5) %>%
-#     setSuitability(const = 1, cropland_suit = 1) %>%
-#     setPreference()
-#
-#   # register demand types ----
-#   regCommodity(name = "crops") %>%
-#     setProduction(by = "cropland", amount = 1)
-#
-#   # register regions ----
-#   st_read(dsn = paste0(data_dir, "example_region.gpkg")) %>%
-#     mutate(region = "somewhere") %>%
-#     regRegions(region = "region")
-#
-#   # register demand ----
-#   tibble(year = c(2000:2019), region = "somewhere", commodity = "crops",
-#          grown = seq(from = 4760, to = 5000, length.out = 20)) %>%
-#     regDemand(values = "grown", region = "region")
-#
-#   # check out the landuse change sequence ----
-#   showSequence()
-#
-#   # prepare input files ----
-#   makeModel()
-#
-#   # and finally run the model ----
-#   runModel()
-#
-#   # make an animation ----
-#   showAnimation(interval = 0.5)
 ```
 
 
-
-# minimal example + pasture
+# minimal example + pasture (ls3d1)
 
 In a system with cropland, forest and pasture, convert forest to cropland at a rate required only by the demand of crops.
 
@@ -569,12 +539,12 @@ In a system with cropland, forest and pasture, convert forest to cropland at a r
 
 model <- "ls3d1"
 
-minimal <- clue_scene(
+scene <- clue_scene(
   root = paste0(tempdir(), "/", model), 
   name = model, 
   period = c(2000, 2024),
   regions = paste0(data, "/test_region.gpkg"),
-  description = "this is a minimal showcase where forest is converted to cropland to produce crops.") |> 
+  description = "") |> 
   clue_gridded(file = paste0(data, "/ls3.tif"),
                type = "initial") |> 
   clue_gridded(file = paste0(data, "/suitability1.tif"), 
@@ -608,8 +578,68 @@ minimal <- clue_scene(
                              amount = seq(from = 5845, to = 6500, length.out = 25))) |> 
   clue_initiate()
 
-clue_run(scene = minimal, clue.exe = ...)
+clue_run(scene = scene, clue.exe = ...)
 ```
+
+## ls3d1, neighborhood
+
+...
+
+```{r}
+#| eval: false
+
+model <- "ls3d1_neighborhood"
+
+scene <- clue_scene(
+  root = paste0(tempdir(), "/", model), 
+  name = model, 
+  period = c(2000, 2024),
+  regions = paste0(data, "/test_region.gpkg"),
+  description = "") |> 
+  clue_gridded(file = paste0(data, "/ls3.tif"),
+               type = "initial") |> 
+  clue_gridded(file = paste0(data, "/suitability1.tif"), 
+               type = "driver", 
+               name = "cropland_suit") |> 
+  clue_gridded(file = paste0(data, "/suitability2_0.tif"),
+               type = "driver", 
+               name = "forest_suit") |> 
+  clue_gridded(file = paste0(data, "/suitability3.tif"),
+               type = "driver", 
+               name = "pasture_suit") |>  
+  clue_landtype(name = "forest", 
+                resistance = 0.5,
+                suitability = tibble(driver = c("const", "forest_suit"),
+                                     beta = c(1, 1)),
+                conversion = tibble(to = "cropland", 
+                                    label = "intensification"),
+                neighborhood = tibble()) |>  
+  clue_landtype(name = "cropland", 
+                resistance = 0.5,
+                suitability = tibble(driver = c("const", "cropland_suit"),
+                                     beta = c(1, 1)),
+                production = tibble(goods = "crops", 
+                                    amount = 1, priority = 1)) |>  
+  clue_landtype(name = "pasture", 
+                resistance = 0.5,
+                suitability = tibble(driver = c("const", "pasture_suit"),
+                                     beta = c(1, 1))) |> 
+  clue_goods(name = "crops", 
+             demand = tibble(year = c(2000:2024), 
+                             region = "ravenholm", 
+                             amount = seq(from = 5845, to = 6500, length.out = 25))) |> 
+```
+
+```{r}
+#| eval: false
+#| echo: false
+
+
+#   # register landuse systems ----
+#   regLanduse(name = "forest", resistance = 0.5) %>%
+#     setNeighbourhood(const = 0, forest = 1, weight = 1)
+```
+
 
 
 # Laos
@@ -795,5 +825,20 @@ model <- ""
 #| eval: false
 #| echo: false
 
+```
+
+
+
+```{r}
+#| eval: false
+#| echo: false
+
+temp <- rast("H:/rdev/clueRIO/_misc/example_data/preferences1.asc")
+writeRaster(x = temp,
+            filename = paste0("H:/rdev/clueRIO/inst/test_data/preference1.tif"),
+            overwrite = TRUE,
+            filetype = "GTiff",
+            datatype = "INT1U",
+            gdal = c("COMPRESS=DEFLATE", "ZLEVEL=9", "PREDICTOR=2"))
 ```
 
