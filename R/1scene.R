@@ -5,19 +5,17 @@
 #' @slot meta [`list(3)`][list]\cr
 #' @slot period [`numeric(2)`][numeric]\cr
 #' @slot landtypes [`list(.)`][list]\cr
-#' @slot drivers [`list(.)`][list]\cr
-#' @slot commodities [`list(.)`][list]\cr
-#' @slot landsystems [`data.frame(.)`][data.frame]\cr
+#' @slot grids [`list(.)`][list]\cr
+#' @slot goods [`list(.)`][list]\cr
 #' @slot validated [`logical(1)`][logical]\cr
 #' @details
 
 scene <- setClass(Class = "scene",
                   slots = c(meta = "list",
                             period = "numeric",
-                            landsystems = "data.frame",
-                            drivers = "list",
+                            grids = "list",
                             landtypes = "list",
-                            commodities = "list")
+                            goods = "list")
 )
 
 setValidity("scene", function(object){
@@ -75,32 +73,22 @@ setValidity("scene", function(object){
     }
   }
 
-  if (!.hasSlot(object = object, name = "commodities")) {
-    errors = c(errors, "the scene does not have a slot named 'commodities'.")
+  if (!.hasSlot(object = object, name = "goods")) {
+    errors = c(errors, "the scene does not have a slot named 'goods'.")
   } else {
-    if(!is.null(object@commodities)){
-      if(!is.list(object@commodities)){
-        errors <- c(errors, "'schema$commodities' must be a list.")
+    if(!is.null(object@goods)){
+      if(!is.list(object@goods)){
+        errors <- c(errors, "'schema$goods' must be a list.")
       }
     }
   }
 
-  if (!.hasSlot(object = object, name = "landsystems")) {
-    errors = c(errors, "the scene does not have a slot named 'landsystems'.")
+  if (!.hasSlot(object = object, name = "grids")) {
+    errors = c(errors, "the scene does not have a slot named 'grids'.")
   } else {
-    if(!is.null(object@landsystems)){
-      if(!is.data.frame(object@landsystems)){
-        errors <- c(errors, "'schema$landsystems' must be a data.frame.")
-      }
-    }
-  }
-
-  if (!.hasSlot(object = object, name = "drivers")) {
-    errors = c(errors, "the scene does not have a slot named 'drivers'.")
-  } else {
-    if(!is.null(object@drivers)){
-      if(!is.list(object@drivers)){
-        errors <- c(errors, "'schema$drivers' must be a list.")
+    if(!is.null(object@grids)){
+      if(!is.list(object@grids)){
+        errors <- c(errors, "'schema$grids' must be a list.")
       }
     }
   }

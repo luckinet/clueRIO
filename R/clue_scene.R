@@ -24,6 +24,7 @@
 #'                    cropland to produce crops.")
 #' @importFrom checkmate assertCharacter assertDirectoryExists assertIntegerish
 #' @importFrom stringr str_replace_all
+#' @importFrom sf write_sf
 #' @importFrom tibble tibble
 #' @importFrom utils packageVersion
 #' @importFrom rlang new_environment
@@ -97,10 +98,9 @@ clue_scene <- function(root, name, period, regions, description = NULL){
                path = root,
                description = description),
              period = period,
-             landsystems = tibble(),
-             drivers = list(),
+             grids = list(),
              landtypes = list(),
-             commodities = list())
+             goods = list())
 
   return(out)
 }
