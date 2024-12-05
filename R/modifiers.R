@@ -14,6 +14,8 @@
 
 # mod_crop_rotation <- function(){
 #
+# also make a modifier out of the "stepwise" running of a model (see runModel.R)
+#
 #   opts <- getOption("lclu")
 #   alloc <- opts$tables$alloc1 %>%
 #     dplyr::select(-alloc, -const)
