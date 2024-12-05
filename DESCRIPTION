@@ -22,6 +22,8 @@ RoxygenNote: 7.3.2
 Imports: 
     checkmate,
     dplyr,
+    readr,
+    tidyr,
     terra,
     sf,
     rlang,
@@ -37,3 +39,4 @@ Suggests:
 Depends: 
     R (>= 2.10)
 Config/testthat/edition: 3
+VignetteBuilder: knitr
