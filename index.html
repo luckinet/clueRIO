@@ -31,6 +31,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="articles/getting_started.html">Getting started</a></li>
 <li class="nav-item"><a class="nav-link" href="articles/use_cases.html">Use cases</a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
@@ -51,89 +52,8 @@
 <!-- badges: start -->
 
 <p><a href="https://github.com/luckinet/cluerio/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/luckinet/cluerio/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://app.codecov.io/gh/luckinet/cluerio?branch=main" class="external-link"><img src="https://codecov.io/gh/luckinet/cluerio/branch/main/graph/badge.svg" alt="Codecov test coverage"></a> <a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a> <!-- badges: end --></p>
-<div class="section level2">
-<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
-</h2>
 <p>The <a href="https://www.environmentalgeography.nl/site/data-models/models/clumondo-model/" class="external-link">CLUMondo</a> model is a dynamic, spatially explicit, land use and land cover change model. clueRIO manages input/output for setting up the file-structure required for successfully configuring and running a CLUE model. This acts as an interface that enables users to build and document scenarios based on such models quickly and in a script-based fashion.</p>
 <p>The most up-to-date version is typically a command line version. This R-package has the aim to simplify specifying all files needed to successfully run that version. Please make sure to reference not only this R-package, but also the references on the website and in particular <em>Van Asselen, S., Verburg, P.H., 2013. Land cover change or land-use intensification: simulating land system change with a global-scale land change model. Global Change Biology 19, 3648–3667</em>.</p>
-</div>
-<div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h2>
-<p>Install the official version from CRAN:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("clueRIO")</span></span></code></pre></div>
-<p>Install the latest development version from github:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"luckinet/clueRIO"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
-</h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/luckinet/cluerio" class="external-link">clueRIO</a></span><span class="op">)</span>; <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/" class="external-link">tibble</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"test_data"</span>, package <span class="op">=</span> <span class="st">"clueRIO"</span>, mustWork <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># our example model will be called '2 land systems (ls2), 1 demand (d1)'.</span></span>
-<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="st">"ls2d1"</span></span>
-<span></span>
-<span><span class="co"># open a new scene for the model</span></span>
-<span><span class="va">minimal</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/clue_scene.html">clue_scene</a></span><span class="op">(</span></span>
-<span>  root <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"/"</span>, <span class="va">model</span><span class="op">)</span>, </span>
-<span>  name <span class="op">=</span> <span class="va">model</span>, </span>
-<span>  period <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">2024</span><span class="op">)</span>,</span>
-<span>  regions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">data</span>, <span class="st">"/test_region.gpkg"</span><span class="op">)</span>,</span>
-<span>  description <span class="op">=</span> <span class="st">"this is a minimal showcase where forest is converted to cropland to produce crops."</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># first, specify the gridded items ...</span></span>
-<span><span class="co"># ... initial land systems</span></span>
-<span><span class="va">minimal</span> <span class="op">&lt;-</span> <span class="va">minimal</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="reference/clue_gridded.html">clue_gridded</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">data</span>, <span class="st">"/ls2.tif"</span><span class="op">)</span>,</span>
-<span>               type <span class="op">=</span> <span class="st">"initial"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># ... then suitability drivers</span></span>
-<span><span class="va">minimal</span> <span class="op">&lt;-</span> <span class="va">minimal</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="reference/clue_gridded.html">clue_gridded</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">data</span>, <span class="st">"/suitability1.tif"</span><span class="op">)</span>, </span>
-<span>               type <span class="op">=</span> <span class="st">"driver"</span>, name <span class="op">=</span> <span class="st">"cropland_suit"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="reference/clue_gridded.html">clue_gridded</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">data</span>, <span class="st">"/suitability2_0.tif"</span><span class="op">)</span>,</span>
-<span>               type <span class="op">=</span> <span class="st">"driver"</span>, name <span class="op">=</span> <span class="st">"forest_suit"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># setup land types</span></span>
-<span><span class="va">minimal</span> <span class="op">&lt;-</span> <span class="va">minimal</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="co"># forest shall be convertable to cropland</span></span>
-<span>  <span class="fu"><a href="reference/clue_landtype.html">clue_landtype</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"forest"</span>, resistance <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span>                suitability <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>driver <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"const"</span>, <span class="st">"forest_suit"</span><span class="op">)</span>,</span>
-<span>                                     beta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                conversion <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>to <span class="op">=</span> <span class="st">"cropland"</span>, </span>
-<span>                                    label <span class="op">=</span> <span class="st">"intensification"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="co"># cropland shall produce crops</span></span>
-<span>  <span class="fu"><a href="reference/clue_landtype.html">clue_landtype</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"cropland"</span>, resistance <span class="op">=</span> <span class="fl">0.5</span>,</span>
-<span>                suitability <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>driver <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"const"</span>, <span class="st">"cropland_suit"</span><span class="op">)</span>,</span>
-<span>                                     beta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                production <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>goods <span class="op">=</span> <span class="st">"crops"</span>, </span>
-<span>                                    amount <span class="op">=</span> <span class="fl">1</span>, priority <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span></span>
-<span><span class="co"># setup goods and services</span></span>
-<span><span class="va">minimal</span> <span class="op">&lt;-</span> <span class="va">minimal</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="reference/clue_goods.html">clue_goods</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"crops"</span>, </span>
-<span>             demand <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span><span class="op">:</span><span class="fl">2024</span><span class="op">)</span>, </span>
-<span>                             region <span class="op">=</span> <span class="st">"ravenholm"</span>, </span>
-<span>                             amount <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">4760</span>, to <span class="op">=</span> <span class="fl">5000</span>, length.out <span class="op">=</span> <span class="fl">25</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># possibly adapt options</span></span>
-<span><span class="co"># clue_options(...)</span></span>
-<span></span>
-<span><span class="co"># initiate the model</span></span>
-<span><span class="fu"><a href="reference/clue_initiate.html">clue_initiate</a></span><span class="op">(</span>scene <span class="op">=</span> <span class="va">minimal</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># and finally run the model</span></span>
-<span><span class="fu"><a href="reference/clue_run.html">clue_run</a></span><span class="op">(</span>scene <span class="op">=</span> <span class="va">minimal</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># possibly backup the model outputs</span></span>
-<span><span class="co"># clue_backup(scene = minimal)</span></span></code></pre></div>
-</div>
 </div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>

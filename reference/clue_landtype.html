@@ -15,7 +15,8 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/use_cases.html">Use cases</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/getting_started.html">Getting started</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/use_cases.html">Use cases</a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/luckinet/cluerio"><span class="fa fa-github"></span></a></li>
@@ -68,36 +69,40 @@ resistance to land change.</p></dd>
 
 
 <dt id="arg-suitability">suitability<a class="anchor" aria-label="anchor" href="#arg-suitability"></a></dt>
-<dd><p><code><a href="https://rdrr.io/r/base/list.html" class="external-link">list(.)</a></code><br> list of the result of regression
-analysis. Includes the constant (<em>beta_0</em>) and as many drivers and
-their beta coefficient as there are (<em>beta_1</em>, <em>beta_2</em>, ...).
-Driver names must correspond to the names defined in
-<code><a href="clue_gridded.html">clue_gridded</a></code>. Each land type must have at least one
-suitability driver (with <code>const = 1</code>).</p></dd>
+<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame(2)</a></code><br> obligatory table of the
+result of regression analysis. At least two rows. Includes the constant
+(<em>beta_0</em>) and as many drivers and their beta coefficient as there are
+in the regression formula (<em>beta_1</em>, <em>beta_2</em>, ...). Must have
+the column <code>const</code> and at least one other column with the name of the
+respective suitability driver. Driver names must correspond to names of
+gridded items of <code>type = "driver"</code> as defined in
+<code><a href="clue_gridded.html">clue_gridded</a></code>.</p></dd>
 
 
 <dt id="arg-production">production<a class="anchor" aria-label="anchor" href="#arg-production"></a></dt>
-<dd><p><code><a href="https://rdrr.io/r/base/list.html" class="external-link">list(.)</a></code><br> optionally, list of services produced
-by this land type. Each list-item is a list itself, its name the service
-produced and the values of the list specify the <code>priority</code> and
-<code>amount</code> of production.</p></dd>
+<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame(3)</a></code><br> optional table of goods
+and services produced by this land type. Each row contains one good. Must
+have column <code>goods</code> for its name, <code>amount</code> of production and
+<code>priority</code>.</p></dd>
 
 
 <dt id="arg-conversion">conversion<a class="anchor" aria-label="anchor" href="#arg-conversion"></a></dt>
-<dd><p><code><a href="https://rdrr.io/r/base/list.html" class="external-link">list(.)</a></code><br> optionally, list of land types into
-which this land type can be converted. Each list-item is a list itself, its
-name the land type into which the focal land type can be converted and the
-values of the list specify the details of conversion. Must have a value for
-<code>'label'</code> and optionally one of <code>min</code>, <code>max</code>,<code>auto</code> or
-<code>'mask'</code>.</p></dd>
+<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame(.)</a></code><br> optional table of land
+types into which this land type can be converted. Each row contains one
+type into which it can be converted. Must have a column <code>to</code> and
+<code>label</code> and for the details of conversion, optionally one of
+<code>min</code>, <code>max</code>,<code>auto</code> or <code>mask</code>.</p></dd>
 
 
 <dt id="arg-neighborhood">neighborhood<a class="anchor" aria-label="anchor" href="#arg-neighborhood"></a></dt>
-<dd><p><code><a href="https://rdrr.io/r/base/list.html" class="external-link">list(1)</a></code><br> work in progress</p></dd>
+<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame(.)</a></code><br> work in progress</p></dd>
 
 
 <dt id="arg-preference">preference<a class="anchor" aria-label="anchor" href="#arg-preference"></a></dt>
-<dd><p><code><a href="https://rdrr.io/r/base/list.html" class="external-link">list(2)</a></code><br> work in progress</p></dd>
+<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame(2)</a></code><br> optional table of
+suitability preferences. One row only. Must have columns <code>layer</code> and
+<code>weight</code>. Layer names must correspond to names of gridded items of
+<code>type = "preference"</code> as defined in <code><a href="clue_gridded.html">clue_gridded</a></code>.</p></dd>
 
 </dl></div>
 
