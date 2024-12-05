@@ -1,0 +1,803 @@
+---
+title: "cluRIO use case overview"
+format:
+  html:
+    toc: true
+    theme: 
+      light: flatly
+      dark: darkly
+    html-math-method: katex
+    number-sections: true
+    anchor-sections: true
+    code-tools: true
+    code-copy: true
+    code-link: true
+    code-fold: true
+    code-summary: "Show the code"
+comments:
+  giscus: 
+    repo: luckinet/clueRIO
+highlight-style: github
+fontsize: 12pt
+linestretch: 1.15
+urlcolor: blue
+vignette: >
+  %\VignetteIndexEntry{use_cases}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+This is a (incomplete) list of potential use cases of this software. They all are reflected by unit tests included in this package and show what functions are required at minimum to build a valid [CLUMondo](https://www.environmentalgeography.nl/site/data-models/models/clumondo-model/) model.
+
+
+## Example data
+
+Let's first load the requried packages and define the path for example data.
+
+```{r setup}
+library(clueRIO)
+library(tibble)
+
+data <- system.file("test_data", package = "clueRIO", mustWork = TRUE)
+```
+
+There are various tables and raster layers used throughout this tutorial.
+
+```{r}
+# plot the rasters
+```
+
+
+# minimal example
+
+In a system with cropland and forest, convert forest to cropland at a rate required only by the demand of crops.
+
+```{r}
+#| eval: false
+
+model <- "ls2d1"
+
+minimal <- clue_scene(
+  root = paste0(tempdir(), "/", model), 
+  name = model, 
+  period = c(2000, 2024),
+  regions = paste0(data, "/test_region.gpkg"),
+  description = "this is a minimal showcase where forest is converted to cropland to produce crops.") |> 
+  clue_gridded(file = paste0(data, "/ls2.tif"),
+               type = "initial") |> 
+  clue_gridded(file = paste0(data, "/suitability1.tif"), 
+               type = "driver", 
+               name = "cropland_suit") |> 
+  clue_gridded(file = paste0(data, "/suitability2_0.tif"),
+               type = "driver", 
+               name = "forest_suit") |> 
+  clue_landtype(name = "forest", 
+                resistance = 0.5,
+                suitability = tibble(driver = c("const", "forest_suit"),
+                                     beta = c(1, 1)),
+                conversion = tibble(to = "cropland", 
+                                    label = "intensification")) |> 
+  clue_landtype(name = "cropland", 
+                resistance = 0.5,
+                suitability = tibble(driver = c("const", "cropland_suit"),
+                                     beta = c(1, 1)),
+                production = tibble(goods = "crops", 
+                                    amount = 1, priority = 1)) |> 
+  clue_goods(name = "crops", 
+             demand = tibble(year = c(2000:2024), 
+                             region = "ravenholm", 
+                             amount = seq(from = 4760, to = 5000, length.out = 25))) |> 
+  clue_initiate()
+
+clue_run(scene = minimal, clue.exe = ...)
+```
+
+## minimal example, stepwise
+
+In a system with cropland and forest, convert forest to cropland at a rate required only by the demand of crops. Here, each year is calculated step by step (allowing further modules to interact with the input data of each new time step).
+
+```{r}
+#| eval: false
+
+model <- "ls2d1_step"
+
+minimal <- clue_scene(
+  root = paste0(tempdir(), "/", model), 
+  name = model, 
+  period = c(2000, 2024),
+  regions = paste0(data, "/test_region.gpkg"),
+  description = "this is a minimal showcase where forest is converted to cropland to produce crops.") |> 
+  clue_gridded(file = paste0(data, "/ls2.tif"),
+               type = "initial") |> 
+  clue_gridded(file = paste0(data, "/suitability1.tif"), 
+               type = "driver", 
+               name = "cropland_suit") |> 
+  clue_gridded(file = paste0(data, "/suitability2_0.tif"),
+               type = "driver", 
+               name = "forest_suit") |> 
+  clue_landtype(name = "forest", 
+                resistance = 0.5,
+                suitability = tibble(driver = c("const", "forest_suit"),
+                                     beta = c(1, 1)),
+                conversion = tibble(to = "cropland", 
+                                    label = "intensification")) |> 
+  clue_landtype(name = "cropland", 
+                resistance = 0.5,
+                suitability = tibble(driver = c("const", "cropland_suit"),
+                                     beta = c(1, 1)),
+                production = tibble(goods = "crops", 
+                                    amount = 1, priority = 1)) |> 
+  clue_goods(name = "crops", 
+             demand = tibble(year = c(2000:2024), 
+                             region = "ravenholm", 
+                             amount = seq(from = 4760, to = 5000, length.out = 25))) |> 
+  clue_initiate(module = "stepwise")
+
+clue_run(scene = minimal, clue.exe = ...)
+```
+
+## minimal example, with mask
+
+There are various ways in which a mask can be employed.
+
+::: {.panel-tabset}
+## protected areas
+
+...
+
+```{r}
+#| eval: false
+
+model <- "ls2d1_protected"
+
+```
+
+```{r}
+#| eval: false
+#| echo: false
+
+#   # define metadata ----
+#   # dir <- tempdir()
+#   # dir <- "/home/se87kuhe/idiv-mount/groups/MAS/01_data/LUCKINet/allocation"
+#   dir <- "/media/se87kuhe/external/r-dev/luckiCLU_misc/testing/"
+#   data_dir <- paste0(system.file("test_datasets", package = "luckiCLU", mustWork = TRUE), "/")
+#
+#   lus <- c("forest", "cropland")
+#   commodities <- c("crops", "trees")
+#   targetCRS <- "+proj=utm +zone=48 +datum=WGS84 +units=m +no_defs"
+#
+#   # start project ----
+#   startProject(root = dir, name = "wuf_protected", start = 2000, end = 2019,
+#                landuse = lus, demands = commodities)
+#
+#   # register gridded objects ----
+#   LUS <- tibble(system = lus) %>%
+#     mutate(ID = seq_along(system)-1)
+#
+#   regGridded(name = "landuse", dir = data_dir, pattern = "ls_2lus", crs = targetCRS)
+#   setLAT(table = LUS)
+#   regGridded(name = "cropland_suit", dir = data_dir, pattern = "suitCropland", crs = targetCRS)
+#   regGridded(name = "forest_suit", dir = data_dir, pattern = "suitForest", crs = targetCRS)
+#   regGridded(name = "region", dir = data_dir, pattern = "protected", crs = targetCRS)
+#
+#   # register landuse systems ----
+#   regLanduse(name = "forest", resistance = 0.5) %>%
+#     setConversion(to = "cropland", label = "Intensivierung") %>%
+#     setSuitability(const = 1, forest_suit = 1)
+#   regLanduse(name = "cropland", resistance = 0.5) %>%
+#     setSuitability(const = 1, cropland_suit = 1)
+#
+#   # register demand types ----
+#   regCommodity(name = "crops") %>%
+#     setProduction(by = "cropland", amount = 1)
+#
+#   # register regions ----
+#   st_read(dsn = paste0(data_dir, "example_region.gpkg")) %>%
+#     mutate(region = "somewhere") %>%
+#     regRegions(region = "region")
+#
+#   # register demand ----
+#   tibble(year = c(2000:2019), region = "somewhere", commodity = "crops",
+#          grown = seq(from = 4760, to = 5000, length.out = 20)) %>%
+#     regDemand(values = "grown", region = "region")
+#
+#   # check out the landuse change sequence ----
+#   showSequence()
+#
+#   # prepare input files ----
+#   makeModel()
+#
+#   # and finally run the model ----
+#   runModel()
+#
+#   # make an animation ----
+#   showAnimation(interval = 0.5)
+```
+
+## conversion limit
+
+...
+
+```{r}
+#| eval: false
+
+model <- "ls2d1_convLimit"
+```
+
+```{r}
+#| eval: false
+#| echo: false
+
+  # clue_gridded(file = paste0(data, "/"),
+  #              type = "restrictions")
+
+  # clue_gridded(file = paste0(data, "/suitability2_0.tif"),
+  #              type = "conversion", name = "crop_mask") |>
+  #              
+
+#   # define metadata ----
+#   # dir <- tempdir()
+#   # dir <- "/home/se87kuhe/idiv-mount/groups/MAS/01_data/LUCKINet/allocation"
+#   dir <- "/media/se87kuhe/external/r-dev/luckiCLU_misc/testing/"
+#   data_dir <- paste0(system.file("test_datasets", package = "luckiCLU", mustWork = TRUE), "/")
+#
+#   lus <- c("forest", "cropland")
+#   commodities <- c("crops", "trees")
+#   targetCRS <- "+proj=utm +zone=48 +datum=WGS84 +units=m +no_defs"
+#
+#   # start project ----
+#   startProject(root = dir, name = "wuf_masked", start = 2000, end = 2019,
+#                landuse = lus, demands = commodities)
+#
+#   # register gridded objects ----
+#   LUS <- tibble(system = lus) %>%
+#     mutate(ID = seq_along(system)-1)
+#
+#   regGridded(name = "landuse", dir = data_dir, pattern = "ls_2lus", crs = targetCRS)
+#   setLAT(table = LUS)
+#   regGridded(name = "cropland_suit", dir = data_dir, pattern = "suitCropland", crs = targetCRS)
+#   regGridded(name = "forest_suit", dir = data_dir, pattern = "suitForest", crs = targetCRS)
+#   # make a new object for masking
+#   temp <- raster(list.files(path = data_dir, pattern = "suitCropland", full.names = TRUE))
+#   temp[temp > 0.7 | temp < 0.5] <- 0
+#   temp[temp != 0] <- 1
+#   regGridded(name = "feld_masked", obj = temp, crs = targetCRS)
+#
+#   # register landuse systems ----
+#   regLanduse(name = "forest", resistance = 0.5) %>%
+#     setConversion(to = "cropland", mask = "feld_masked", label = "Intensivierung") %>%
+#     setSuitability(const = 1, forest_suit = 1)
+#   regLanduse(name = "cropland", resistance = 0.5) %>%
+#     setSuitability(const = 1, cropland_suit = 1)
+#
+#   # register demand types ----
+#   regCommodity(name = "crops") %>%
+#     setProduction(by = "cropland", amount = 1)
+#
+#   # register regions ----
+#   st_read(dsn = paste0(data_dir, "example_region.gpkg")) %>%
+#     mutate(region = "somewhere") %>%
+#     regRegions(region = "region")
+#
+#   # register demand ----
+#   tibble(year = c(2000:2019), region = "somewhere", commodity = "crops",
+#          grown = seq(from = 4760, to = 5000, length.out = 20)) %>%
+#     regDemand(values = "grown", region = "region")
+#
+#   # check out the landuse change sequence ----
+#   showSequence()
+#
+#   # prepare input files ----
+#   makeModel()
+#
+#   # and finally run the model ----
+#   runModel()
+#
+#   # make an animation ----
+#   showAnimation(interval = 0.5)
+
+```
+
+
+## protected areas + conversion limit
+
+...
+
+```{r}
+#| eval: false
+
+model <- "ls2d1_limit_prot"
+
+```
+
+```{r}
+#| eval: false
+#| echo: false
+
+#   # define metadata ----
+#   # dir <- tempdir()
+#   # dir <- "/home/se87kuhe/idiv-mount/groups/MAS/01_data/LUCKINet/allocation"
+#   dir <- "/media/se87kuhe/external/r-dev/luckiCLU_misc/testing/"
+#   data_dir <- paste0(system.file("test_datasets", package = "luckiCLU", mustWork = TRUE), "/")
+#
+#   lus <- c("forest", "cropland")
+#   commodities <- c("crops", "trees")
+#   targetCRS <- "+proj=utm +zone=48 +datum=WGS84 +units=m +no_defs"
+#
+#   # start project ----
+#   startProject(root = dir, name = "wuf_masked_protected", start = 2000, end = 2019,
+#                landuse = lus, demands = commodities)
+#
+#   # register gridded objects ----
+#   LUS <- tibble(system = lus) %>%
+#     mutate(ID = seq_along(system)-1)
+#
+#   regGridded(name = "landuse", dir = data_dir, pattern = "ls_2lus", crs = targetCRS)
+#   setLAT(table = LUS)
+#   regGridded(name = "cropland_suit", dir = data_dir, pattern = "suitCropland", crs = targetCRS)
+#   regGridded(name = "forest_suit", dir = data_dir, pattern = "suitForest", crs = targetCRS)
+#   # make a new object for masking
+#   temp <- raster(list.files(path = data_dir, pattern = "suitCropland", full.names = TRUE))
+#   temp[temp > 0.7 | temp < 0.5] <- 0
+#   temp[temp != 0] <- 1
+#   regGridded(name = "feld_masked", obj = temp, crs = targetCRS)
+#   regGridded(name = "region", dir = data_dir, pattern = "protected", crs = targetCRS)
+#
+#   # register landuse systems ----
+#   regLanduse(name = "forest", resistance = 0.5) %>%
+#     setConversion(to = "cropland", mask = "feld_masked", label = "Intensivierung") %>%
+#     setSuitability(const = 1, forest_suit = 1)
+#   regLanduse(name = "cropland", resistance = 0.5) %>%
+#     setSuitability(const = 1, cropland_suit = 1)
+#
+#   # register demand types ----
+#   regCommodity(name = "crops") %>%
+#     setProduction(by = "cropland", amount = 1)
+#
+#   # register regions ----
+#   st_read(dsn = paste0(data_dir, "example_region.gpkg")) %>%
+#     mutate(region = "somewhere") %>%
+#     regRegions(region = "region")
+#
+#   # register demand ----
+#   tibble(year = c(2000:2019), region = "somewhere", commodity = "crops",
+#          grown = seq(from = 4760, to = 5000, length.out = 20)) %>%
+#     regDemand(values = "grown", region = "region")
+#
+#   # check out the landuse change sequence ----
+#   showSequence()
+#
+#   # prepare input files ----
+#   makeModel()
+#
+#   # and finally run the model ----
+#   runModel()
+#
+#   # make an animation ----
+#   showAnimation(interval = 0.5)
+```
+
+:::
+
+
+
+## minimal example, 
+
+...
+
+```{r}
+#| eval: false
+
+model <- "ls2d1_cropRot"
+
+```
+
+```{r}
+#| eval: false
+#| echo: false
+
+```
+
+## minimal example, dynamic driver
+
+This model has yearly suitability layers (i.e., dynamic drivers).
+
+```{r}
+#| eval: false
+
+model <- "ls2d1_dynamic"
+
+```
+
+```{r}
+#| eval: false
+#| echo: false
+
+#   # define metadata ----
+#   # dir <- tempdir()
+#   # dir <- "/home/se87kuhe/idiv-mount/groups/MAS/01_data/LUCKINet/allocation"
+#   dir <- "/media/se87kuhe/external/r-dev/luckiCLU_misc/testing/"
+#   data_dir <- paste0(system.file("test_datasets", package = "luckiCLU", mustWork = TRUE), "/")
+#
+#   lus <- c("forest", "cropland")
+#   commodities <- c("crops", "trees")
+#   targetCRS <- "+proj=utm +zone=48 +datum=WGS84 +units=m +no_defs"
+#
+#   # start project ----
+#   startProject(root = dir, name = "2lus_1demand_dynamicDriver", start = 2000, end = 2019,
+#                landuse = lus, demands = commodities)
+#
+#   # register gridded objects ----
+#   LUS <- tibble(system = lus) %>%
+#     mutate(ID = seq_along(system)-1)
+#
+#   regGridded(name = "landuse", dir = data_dir, pattern = "ls_2lus", crs = targetCRS)
+#   setLAT(table = LUS)
+#   regGridded(name = "cropland_suit", dir = data_dir, pattern = "suitCropland", crs = targetCRS)
+#   regGridded(name = "forest_suit", dir = data_dir, pattern = "suitForest_year", crs = targetCRS)
+#
+#   # register landuse systems ----
+#   regLanduse(name = "forest", resistance = 0.5) %>%
+#     setConversion(to = "cropland", label = "Intensivierung") %>%
+#     setSuitability(const = 1, forest_suit = 1)
+#   regLanduse(name = "cropland", resistance = 0.5) %>%
+#     setSuitability(const = 1, cropland_suit = 1)
+#
+#   # register demand types ----
+#   regCommodity(name = "crops") %>%
+#     setProduction(by = "cropland", amount = 1)
+#
+#   # register regions ----
+#   st_read(dsn = paste0(data_dir, "example_region.gpkg")) %>%
+#     mutate(region = "somewhere") %>%
+#     regRegions(region = "region")
+#
+#   # register demand ----
+#   tibble(year = c(2000:2019), region = "somewhere", commodity = "crops",
+#          grown = seq(from = 4760, to = 5000, length.out = 20)) %>%
+#     regDemand(values = "grown", region = "region")
+#
+#   # check out the landuse change sequence ----
+#   showSequence()
+#
+#   # prepare input files ----
+#   makeModel()
+#
+#   # and finally run the model ----
+#   runModel()
+#
+#   # make an animation ----
+#   showAnimation(interval = 0.5)
+
+```
+
+## minimal example, location specific preferences
+
+...
+
+```{r}
+#| eval: false
+
+model <- "ls2d1_preferences"
+
+```
+
+```{r}
+#| eval: false
+#| echo: false
+
+# clue_gridded(file = paste0(data, "/"), 
+#              type = "preference", name = "")
+
+#   # define metadata ----
+#   # dir <- tempdir()
+#   # dir <- "/home/se87kuhe/idiv-mount/groups/MAS/01_data/LUCKINet/allocation"
+#   dir <- "/media/se87kuhe/external/r-dev/luckiCLU_misc/testing/"
+#   data_dir <- paste0(system.file("test_datasets", package = "luckiCLU", mustWork = TRUE), "/")
+#
+#   lus <- c("forest", "cropland")
+#   commodities <- c("crops", "trees")
+#   targetCRS <- "+proj=utm +zone=48 +datum=WGS84 +units=m +no_defs"
+#
+#   # start project ----
+#   startProject(root = dir, name = "2lus_1demand_locSpec", start = 2000, end = 2019,
+#                landuse = lus, demands = commodities)
+#
+#   # register gridded objects ----
+#   LUS <- tibble(system = lus) %>%
+#     mutate(ID = seq_along(system)-1)
+#
+#   regGridded(name = "landuse", dir = data_dir, pattern = "ls_2lus", crs = targetCRS)
+#   setLAT(table = LUS)
+#   regGridded(name = "cropland_suit", dir = data_dir, pattern = "suitCropland", crs = targetCRS)
+#   regGridded(name = "forest_suit", dir = data_dir, pattern = "suitForest_year0", crs = targetCRS)
+#   regGridded(name = "pref_wald", dir = data_dir, pattern = "preferences1", crs = targetCRS)
+#
+#   # register landuse systems ----
+#   regLanduse(name = "forest", resistance = 0.5) %>%
+#     setSuitability(const = 1, forest_suit = 1) %>%
+#     setPreference(layer = "pref_wald", weight = 1) %>%
+#     setConversion(to = "cropland", label = "Intensivierung")
+#   regLanduse(name = "cropland", resistance = 0.5) %>%
+#     setSuitability(const = 1, cropland_suit = 1) %>%
+#     setPreference()
+#
+#   # register demand types ----
+#   regCommodity(name = "crops") %>%
+#     setProduction(by = "cropland", amount = 1)
+#
+#   # register regions ----
+#   st_read(dsn = paste0(data_dir, "example_region.gpkg")) %>%
+#     mutate(region = "somewhere") %>%
+#     regRegions(region = "region")
+#
+#   # register demand ----
+#   tibble(year = c(2000:2019), region = "somewhere", commodity = "crops",
+#          grown = seq(from = 4760, to = 5000, length.out = 20)) %>%
+#     regDemand(values = "grown", region = "region")
+#
+#   # check out the landuse change sequence ----
+#   showSequence()
+#
+#   # prepare input files ----
+#   makeModel()
+#
+#   # and finally run the model ----
+#   runModel()
+#
+#   # make an animation ----
+#   showAnimation(interval = 0.5)
+```
+
+
+
+# minimal example + pasture
+
+In a system with cropland, forest and pasture, convert forest to cropland at a rate required only by the demand of crops.
+
+```{r}
+#| eval: false
+
+model <- "ls3d1"
+
+minimal <- clue_scene(
+  root = paste0(tempdir(), "/", model), 
+  name = model, 
+  period = c(2000, 2024),
+  regions = paste0(data, "/test_region.gpkg"),
+  description = "this is a minimal showcase where forest is converted to cropland to produce crops.") |> 
+  clue_gridded(file = paste0(data, "/ls3.tif"),
+               type = "initial") |> 
+  clue_gridded(file = paste0(data, "/suitability1.tif"), 
+               type = "driver", 
+               name = "cropland_suit") |> 
+  clue_gridded(file = paste0(data, "/suitability2_0.tif"),
+               type = "driver", 
+               name = "forest_suit") |> 
+  clue_gridded(file = paste0(data, "/suitability3.tif"),
+               type = "driver", 
+               name = "pasture_suit") |> 
+  clue_landtype(name = "forest", 
+                resistance = 0.5,
+                suitability = tibble(driver = c("const", "forest_suit"),
+                                     beta = c(1, 1)),
+                conversion = tibble(to = "cropland", 
+                                    label = "intensification")) |> 
+  clue_landtype(name = "cropland", 
+                resistance = 0.5,
+                suitability = tibble(driver = c("const", "cropland_suit"),
+                                     beta = c(1, 1)),
+                production = tibble(goods = "crops", 
+                                    amount = 1, priority = 1)) |> 
+  clue_landtype(name = "pasture", 
+                resistance = 0.5,
+                suitability = tibble(driver = c("const", "pasture_suit"),
+                                     beta = c(1, 1))) |> 
+  clue_goods(name = "crops", 
+             demand = tibble(year = c(2000:2024), 
+                             region = "ravenholm", 
+                             amount = seq(from = 5845, to = 6500, length.out = 25))) |> 
+  clue_initiate()
+
+clue_run(scene = minimal, clue.exe = ...)
+```
+
+
+# Laos
+
+This is the native CLUMonodo example, here we implement it with the code of `clueRIO`.
+
+```{r}
+#| eval: false
+
+model <- "laos"
+
+```
+
+```{r}
+#| eval: false
+#| echo: false
+
+# also make a usecase where the laos data are pulled from zenodo (need to setup that repo) and then used as conveniently as possible (https://ict.ipbes.net/ipbes-ict-guide/data-and-knowledge-management/technical-guidelines/zenodo)
+
+#   # define metadata ----
+#   # dir <- tempdir()
+#   # dir <- "/home/se87kuhe/idiv-mount/groups/MAS/01_data/LUCKINet/allocation"
+#   dir <- "/media/se87kuhe/external/r-dev/luckiCLU_misc/testing"
+#   data_dir <- paste0(system.file("test_datasets", package = "luckiCLU", mustWork = TRUE), "/")
+#
+#   lus <- c("Rock", "Water", "Urban", "Mining concessions", "Tree plantation concessions",
+#            "Arable plantation concessions", "Closed forest", "Shifting cultivation",
+#            "Permanent cultivation", "Forest - SC mosaic", "Forest - permanent mosaic")
+#   commodities <- c("Built-up", "Staple crop", "Arable cash crop", "Tree cash crop")
+#   targetCRS <- "+proj=utm +zone=48 +datum=WGS84 +units=m +no_defs"
+#
+#   # start project ----
+#   startProject(root = dir, name = "laos", start = 2010, end = 2020,
+#                landuse = lus, demands = commodities)
+#
+#   # register gridded objects ----
+#   regGridded(name = "landuse", dir = data_dir, pattern = "cov_all.0", crs = targetCRS)
+#   tibble(system = lus) %>%
+#     mutate(ID = seq_along(system)-1) %>%
+#     setLAT()
+#
+#   # then, set the regular drivers (doesn't need RAT)
+#   regGridded(name = "w_3_ab2k", dir = data_dir, pattern = "gr0.fil", crs = targetCRS)
+#   regGridded(name = "access", dir = data_dir, pattern = "gr1.fil", crs = targetCRS)
+#   regGridded(name = "access_dom", dir = data_dir, pattern = "gr2.fil", crs = targetCRS)
+#   regGridded(name = "access_int", dir = data_dir, pattern = "gr3.fil", crs = targetCRS)
+#   regGridded(name = "contractp", dir = data_dir, pattern = "gr4.fil", crs = targetCRS)
+#   regGridded(name = "popdensity", dir = data_dir, pattern = "gr5.fil", crs = targetCRS)
+#   regGridded(name = "slope", dir = data_dir, pattern = "gr6.fil", crs = targetCRS)
+#   regGridded(name = "elevation", dir = data_dir, pattern = "gr7.fil", crs = targetCRS)
+#   regGridded(name = "precipitation", dir = data_dir, pattern = "gr8.fil", crs = targetCRS)
+#   regGridded(name = "temperature", dir = data_dir, pattern = "gr9.fil", crs = targetCRS)
+#   regGridded(name = "awc_1", dir = data_dir, pattern = "gr10.fil", crs = targetCRS)
+#   regGridded(name = "awc_4", dir = data_dir, pattern = "gr11.fil", crs = targetCRS)
+#   regGridded(name = "awc_5", dir = data_dir, pattern = "gr12.fil", crs = targetCRS)
+#   regGridded(name = "drain4", dir = data_dir, pattern = "gr13.fil", crs = targetCRS)
+#   regGridded(name = "t_clay", dir = data_dir, pattern = "gr14.fil", crs = targetCRS)
+#   regGridded(name = "s_clay", dir = data_dir, pattern = "gr15.fil", crs = targetCRS)
+#   regGridded(name = "t_gravel", dir = data_dir, pattern = "gr16.fil", crs = targetCRS)
+#   regGridded(name = "toc_4", dir = data_dir, pattern = "gr17.fil", crs = targetCRS)
+#   regGridded(name = "w_2_un2k", dir = data_dir, pattern = "gr18.fil", crs = targetCRS)
+#
+#   # register landuse systems ----
+#   regLanduse(name = "Rock", resistance = 1)
+#   regLanduse(name = "Water", resistance = 1)
+#   regLanduse(name = "Urban", resistance = 1)
+#   regLanduse(name = "Mining concessions", resistance = 1)
+#   regLanduse(name = "Tree plantation concessions", resistance = 0.8) %>%
+#     setConversion(to = "Urban", label = "urbanisation")
+#   regLanduse(name = "Arable plantation concessions", resistance = 0.6) %>%
+#     setConversion(to = "Urban", label = "urbanisation")
+#   regLanduse(name = "Closed forest", resistance = 0.2) %>%
+#     setConversion(to = "Urban", label = "urbanisation") %>%
+#     setConversion(to = "Tree plantation concessions", label = "intensification") %>%
+#     setConversion(to = "Arable plantation concessions", label = "intensification") %>%
+#     setConversion(to = "Shifting cultivation", label = "intensification") %>%
+#     setConversion(to = "Permanent cultivation", label = "intensification") %>%
+#     setConversion(to = "Forest - SC mosaic", label = "intensification") %>%
+#     setConversion(to = "Forest - permanent mosaic", label = "intensification")
+#   regLanduse(name = "Shifting cultivation", resistance = 0.2) %>%
+#     setConversion(to = "Urban", label = "urbanisation") %>%
+#     setConversion(to = "Tree plantation concessions", label = "intensification") %>%
+#     setConversion(to = "Arable plantation concessions", label = "intensification") %>%
+#     setConversion(to = "Closed forest", label = "abandonment")
+#   regLanduse(name = "Permanent cultivation", resistance = 0.45) %>%
+#     setConversion(to = "Urban", label = "urbanisation") %>%
+#     setConversion(to = "Tree plantation concessions", label = "intensification") %>%
+#     setConversion(to = "Arable plantation concessions", label = "intensification") %>%
+#     setConversion(to = "Closed forest", label = "extensification") %>%
+#     setConversion(to = "Forest - permanent mosaic", label = "extensification")
+#   regLanduse(name = "Forest - SC mosaic", resistance = 0.2) %>%
+#     setConversion(to = "Urban", label = "urbanisation") %>%
+#     setConversion(to = "Tree plantation concessions", label = "intensification") %>%
+#     setConversion(to = "Arable plantation concessions", label = "intensification") %>%
+#     setConversion(to = "Closed forest", label = "extensification") %>%
+#     setConversion(to = "Shifting cultivation", label = "expansion")
+#   regLanduse(name = "Forest - permanent mosaic", resistance = 0.2) %>%
+#     setConversion(to = "Urban", label = "urbanisation") %>%
+#     setConversion(to = "Tree plantation concessions", label = "intensification") %>%
+#     setConversion(to = "Arable plantation concessions", label = "intensification") %>%
+#     setConversion(to = "Closed forest", label = "extensification") %>%
+#     setConversion(to = "Permanent cultivation", label = "intensification")
+#
+#   # set suitability ----
+#   read_csv(file = paste0(data_dir, "params.csv")) %>%
+#     setSuitability(table = .)
+#
+#   # register demand types ----
+#   regCommodity(name = "Built-up") %>%
+#     setProduction(by = "Urban", amount = 400)
+#   regCommodity(name = "Staple crop") %>%
+#     setProduction(by = "Permanent cultivation", amount = 2.72) %>%
+#     setProduction(by = "Shifting cultivation", amount = 2.08) %>%
+#     setProduction(by = c("Forest - SC mosaic", "Forest - permanent mosaic"), amount = c(0.80, 1.44))
+#   regCommodity(name = "Arable cash crop") %>%
+#     setProduction(by = "Arable plantation concessions", amount = 6.40)
+#   regCommodity(name = "Tree cash crop") %>%
+#     setProduction(by = "Tree plantation concessions", amount = 6.40)
+#
+#   # register regions ----
+#   read_rds(path = paste0(data_dir, "gadm36_LAO_0_sf.rds")) %>%
+#     mutate(region = tolower(NAME_0)) %>%
+#     dplyr::select(region, geometry, -GID_0, -NAME_0) %>%
+#     regRegions(region = "region")
+#
+#   # register demand ----
+#   read_csv(file = paste0(data_dir, "demands.csv")) %>%
+#     dplyr::select(year, commodity = type, region, values = demand) %>%
+#     regDemand(values = "values", region = "region")
+#
+#   # check out the landuse change sequence ----
+#   makeSequence()
+#
+#   # prepare input files ----
+#   makeModel()
+#
+#   # and finally run the model ----
+#   runModel()
+#
+#   # make an animation ----
+#   makeAnimation()
+
+```
+
+
+```{r}
+#| eval: false
+#| echo: false
+
+# alternative way that may be better suited to batch processing
+# .suit <- tibble(type = c("forest", "forest", "cropland", "cropland"),
+#                 driver = c("const", "forest_suit", "const", "cropland_suit"),
+#                 beta = c(1, 1, 1, 1))
+# .conv <- tibble(type = "forest",
+#                 to = "cropland", 
+#                 label = "intensification")
+# .prod <- tibble(goods = "crops", 
+#                 amount = 1,
+#                 priority = 1)
+# 
+# minimal <- minimal |> 
+#   clue_landtype(name = "forest", resistance = 0.5,
+#                 suitability = .suit |> filter(type == "forest"),
+#                 conversion = .conv |> filter(type = "forest")) |> 
+#   clue_landtype(name = "cropland", resistance = 0.5,
+#                 suitability = .suit |> filter(type == "cropland"),
+#                 production = .prod |> filter(goods == "crops"))
+
+```
+
+# template 
+
+...
+
+```{r}
+#| eval: false
+
+model <- ""
+
+```
+
+```{r}
+#| eval: false
+#| echo: false
+
+```
+
+
+# Outro
+
+If you have any questions, issue reports or (kind) comments, please leave them below!
