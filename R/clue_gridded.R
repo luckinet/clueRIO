@@ -10,7 +10,7 @@
 #' @return
 #' @examples
 #' @importFrom checkmate assertClass assertFileExists assertCharacter testClass
-#'   assertChoice
+#'   assertChoice assertSubset
 #' @importFrom dplyr first last
 #' @importFrom stringr str_split str_replace
 #' @importFrom purrr map_int
@@ -23,10 +23,11 @@ clue_gridded <- function(scene, file, type, name = NULL, ...){
   assertClass(x = scene, classes = "scene")
   assertCharacter(x = name, len = 1, any.missing = FALSE, null.ok = TRUE)
   isRast <- testClass(x = file, classes = "SpatRaster")
-  assertChoice(x = type, choices = c("initial", "restrictions", "conversion", "driver"))
+  assertChoice(x = type, choices = c("initial", "restrictions", "driver", "conversion", "preference"))
 
   root <- scene@meta$path
   opts <- getOption("clue")
+  noData <- -9999
 
   .testGrid <- function(test, init, vals = NULL){
 
@@ -36,7 +37,7 @@ clue_gridded <- function(scene, file, type, name = NULL, ...){
     if(!is.null(vals)){
       # ensure the new layer has correct values
       xVals <- unique(values(test, mat = FALSE))
-      assertTRUE(x = all(vals %in% xVals))
+      assertSubset(x = xVals, choices = vals, .var.name = "vals(gridded)")
     }
 
     # ensure the new layer has the same attributes
@@ -74,7 +75,6 @@ clue_gridded <- function(scene, file, type, name = NULL, ...){
     name <- "initial"
     fileName <- "cov_all.0"
     dataType <- "INT4U"
-    noData <- -9999
     theID <- 0
 
     # set options according to this layer
@@ -90,11 +90,10 @@ clue_gridded <- function(scene, file, type, name = NULL, ...){
     name <- "restriction"
     fileName <- "region.fil"
     dataType <- "INT1U"
-    noData <- -9999
     theID <- 0
 
     # set required values
-    gridded <- subst(gridded, NA, nodata)
+    gridded <- subst(gridded, NA, noData)
     gridded[gridded > 0] <- 0
 
     .testGrid(test = gridded,
@@ -106,7 +105,6 @@ clue_gridded <- function(scene, file, type, name = NULL, ...){
     assertCharacter(x = name)
     fileName <- "sc1gr_X_.fil"
     dataType <- datatype(gridded)
-    noData <- -9999
 
     prev <- tbl_gridded |>
       filter(type %in% c("driver", "conversion"))
@@ -143,7 +141,7 @@ clue_gridded <- function(scene, file, type, name = NULL, ...){
     if(dim(prev)[1] %in% c(0, 1)){
       theID <- 2
     } else {
-      theID <- dim(prev)[1]
+      theID <- max(prev$id) + 1
     }
 
     fileName <- str_replace(string = fileName, pattern = "_X_", replacement = as.character(theID))
@@ -152,17 +150,26 @@ clue_gridded <- function(scene, file, type, name = NULL, ...){
               init = scene@grids$initial$file)
 
   } else if(type == "preference"){
-    stop("'preference' is currently work in progress")
 
-    # assertCharacter(x = name)
-    # fileName <- "locspec_X_.fil"
-    # dataType <- ""
-    # noData <- -9999
-    # theID <- NA_integer_
-    #
-    # .testGrid(test = gridded,
-    #           init = scene@grids$initial$file,
-    #           vals = )
+    assertCharacter(x = name)
+    fileName <- "locspec_X_.fil"
+    dataType <- "INT1U"
+    theID <- NA_integer_
+
+    # set required values
+    gridded <- subst(gridded, NA, noData)
+    gridded[gridded > 1] <- 1
+
+    # handle dynamic drivers
+    if(length(file) != 1){
+      stop("dynamic location specific preferences are currently work in progress")
+      # fileName <- str_replace(string = fileName, pattern = "fil", replacement = year values)
+
+    }
+
+    .testGrid(test = gridded,
+              init = scene@grids$initial$file,
+              vals = c(-9999, 0, 1))
 
   }
 

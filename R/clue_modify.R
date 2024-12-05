@@ -11,4 +11,9 @@ clue_modify <- function(scene){
 
   assertClass(x = scene, classes = "scene")
 
+
+  # stepwise
+
+  # self-limit (see setPreference.R in the old functions)
+
 }

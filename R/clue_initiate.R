@@ -19,7 +19,7 @@
 
 clue_initiate <- function(scene, module = NULL){
 
-  # library(checkmate); library(tibble); library(purrr); library(readr); library(tidyr); library(stringr); opts_old <- readRDS(paste0(getwd(), "/_misc/old_functions/old_datastructure.rds"))
+  # library(dplyr); library(checkmate); library(tibble); library(purrr); library(readr); library(tidyr); library(stringr); opts_old <- readRDS(paste0(getwd(), "/_misc/old_functions/old_datastructure.rds"))
 
   assertClass(x = scene, classes = "scene")
   # assertChoice(x = module, choices = c(), null.ok = TRUE)
@@ -189,6 +189,9 @@ clue_initiate <- function(scene, module = NULL){
 
   write_delim(x = .lusmatrix, col_names = FALSE,
               file = paste0(root, "lusmatrix.txt"))
+
+  ## locspec#.fil
+  # make sure that locspec files are available for all land systems
 
 
   ## main.1 ----
