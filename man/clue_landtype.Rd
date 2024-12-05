@@ -23,28 +23,32 @@ clue_landtype(
 \item{resistance}{\code{\link[=numeric]{numeric(1)}}\cr the relative conversion
 resistance to land change.}
 
-\item{suitability}{\code{\link[=list]{list(.)}}\cr list of the result of regression
-analysis. Includes the constant (\emph{beta_0}) and as many drivers and
-their beta coefficient as there are (\emph{beta_1}, \emph{beta_2}, ...).
-Driver names must correspond to the names defined in
-\code{\link{clue_gridded}}. Each land type must have at least one
-suitability driver (with \code{const = 1}).}
+\item{suitability}{\code{\link[=data.frame]{data.frame(2)}}\cr obligatory table of the
+result of regression analysis. At least two rows. Includes the constant
+(\emph{beta_0}) and as many drivers and their beta coefficient as there are
+in the regression formula (\emph{beta_1}, \emph{beta_2}, ...). Must have
+the column \code{const} and at least one other column with the name of the
+respective suitability driver. Driver names must correspond to names of
+gridded items of \code{type = "driver"} as defined in
+\code{\link{clue_gridded}}.}
 
-\item{production}{\code{\link[=list]{list(.)}}\cr optionally, list of services produced
-by this land type. Each list-item is a list itself, its name the service
-produced and the values of the list specify the \code{priority} and
-\code{amount} of production.}
+\item{production}{\code{\link[=data.frame]{data.frame(3)}}\cr optional table of goods
+and services produced by this land type. Each row contains one good. Must
+have column \code{goods} for its name, \code{amount} of production and
+\code{priority}.}
 
-\item{conversion}{\code{\link[=list]{list(.)}}\cr optionally, list of land types into
-which this land type can be converted. Each list-item is a list itself, its
-name the land type into which the focal land type can be converted and the
-values of the list specify the details of conversion. Must have a value for
-\code{'label'} and optionally one of \code{min}, \code{max},\code{auto} or
-\code{'mask'}.}
+\item{conversion}{\code{\link[=data.frame]{data.frame(.)}}\cr optional table of land
+types into which this land type can be converted. Each row contains one
+type into which it can be converted. Must have a column \code{to} and
+\code{label} and for the details of conversion, optionally one of
+\code{min}, \code{max},\code{auto} or \code{mask}.}
 
-\item{neighborhood}{\code{\link[=list]{list(1)}}\cr work in progress}
+\item{neighborhood}{\code{\link[=data.frame]{data.frame(.)}}\cr work in progress}
 
-\item{preference}{\code{\link[=list]{list(2)}}\cr work in progress}
+\item{preference}{\code{\link[=data.frame]{data.frame(2)}}\cr optional table of
+suitability preferences. One row only. Must have columns \code{layer} and
+\code{weight}. Layer names must correspond to names of gridded items of
+\code{type = "preference"} as defined in \code{\link{clue_gridded}}.}
 }
 \description{
 Set land types and their attributes

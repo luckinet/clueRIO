@@ -4,29 +4,33 @@
 #' @param name [`character(1)`][character]\cr name of the land type.
 #' @param resistance [`numeric(1)`][numeric]\cr the relative conversion
 #'   resistance to land change.
-#' @param suitability [`list(.)`][list]\cr list of the result of regression
-#'   analysis. Includes the constant (\emph{beta_0}) and as many drivers and
-#'   their beta coefficient as there are (\emph{beta_1}, \emph{beta_2}, ...).
-#'   Driver names must correspond to the names defined in
-#'   \code{\link{clue_gridded}}. Each land type must have at least one
-#'   suitability driver (with \code{const = 1}).
-#' @param production [`list(.)`][list]\cr optionally, list of services produced
-#'   by this land type. Each list-item is a list itself, its name the service
-#'   produced and the values of the list specify the \code{priority} and
-#'   \code{amount} of production.
-#' @param conversion [`list(.)`][list]\cr optionally, list of land types into
-#'   which this land type can be converted. Each list-item is a list itself, its
-#'   name the land type into which the focal land type can be converted and the
-#'   values of the list specify the details of conversion. Must have a value for
-#'   \code{'label'} and optionally one of \code{min}, \code{max},\code{auto} or
-#'   \code{'mask'}.
-#' @param neighborhood [`list(1)`][list]\cr work in progress
-#' @param preference [`list(2)`][list]\cr work in progress
+#' @param suitability [`data.frame(2)`][data.frame]\cr obligatory table of the
+#'   result of regression analysis. At least two rows. Includes the constant
+#'   (\emph{beta_0}) and as many drivers and their beta coefficient as there are
+#'   in the regression formula (\emph{beta_1}, \emph{beta_2}, ...). Must have
+#'   the column \code{const} and at least one other column with the name of the
+#'   respective suitability driver. Driver names must correspond to names of
+#'   gridded items of \code{type = "driver"} as defined in
+#'   \code{\link{clue_gridded}}.
+#' @param production [`data.frame(3)`][data.frame]\cr optional table of goods
+#'   and services produced by this land type. Each row contains one good. Must
+#'   have column \code{goods} for its name, \code{amount} of production and
+#'   \code{priority}.
+#' @param conversion [`data.frame(.)`][data.frame]\cr optional table of land
+#'   types into which this land type can be converted. Each row contains one
+#'   type into which it can be converted. Must have a column \code{to} and
+#'   \code{label} and for the details of conversion, optionally one of
+#'   \code{min}, \code{max},\code{auto} or \code{mask}.
+#' @param neighborhood [`data.frame(.)`][data.frame]\cr work in progress
+#' @param preference [`data.frame(2)`][data.frame]\cr optional table of
+#'   suitability preferences. One row only. Must have columns \code{layer} and
+#'   \code{weight}. Layer names must correspond to names of gridded items of
+#'   \code{type = "preference"} as defined in \code{\link{clue_gridded}}.
 #' @details
 #' @return
 #' @examples
 #' @importFrom checkmate assertClass assertCharacter assertDataFrame assertList
-#'   assertNames assertChoice
+#'   assertNames assertChoice assertNumber
 #' @importFrom tibble tibble as_tibble add_column add_row
 #' @importFrom dplyr bind_cols bind_rows mutate everything case_when
 #' @importFrom tidyr pivot_wider pivot_longer nest
@@ -39,11 +43,11 @@ clue_landtype <- function(scene, name, resistance = NULL, suitability = NULL,
 
   assertClass(x = scene, classes = "scene")
   assertCharacter(x = name, len = 1, any.missing = FALSE)
-  assertDataFrame(x = suitability, ncols = 2, all.missing = FALSE)
+  assertDataFrame(x = suitability, min.rows = 1, ncols = 2, all.missing = FALSE)
   assertDataFrame(x = production, all.missing = FALSE, null.ok = TRUE)
   assertDataFrame(x = conversion, min.cols = 2, all.missing = FALSE, null.ok = TRUE)
   assertDataFrame(x = neighborhood, all.missing = FALSE, null.ok = TRUE)
-  assertDataFrame(x = preference, all.missing = FALSE, null.ok = TRUE)
+  assertDataFrame(x = preference, nrows = 1, all.missing = FALSE, null.ok = TRUE)
 
   # make sure that gridded layers are available
   if(length(scene@grids) == 0){
@@ -110,10 +114,10 @@ clue_landtype <- function(scene, name, resistance = NULL, suitability = NULL,
   # handle preference ----
   #
   if(!is.null(preference)){
-    stop("'preference' is currently work in progress")
-    # assertNames(x = names(preference), must.include = c("layer", "weight"))
+    assertNames(x = names(preference), must.include = c("layer", "weight"))
+    assertNumber(x = preference$weight, lower = 0, upper = 1, finite = TRUE)
   } else {
-    preference <- tibble(layer = NA_real_, weight = NA_real_)
+    preference <- tibble(layer = NA_character_, weight = NA_real_)
   }
 
 
