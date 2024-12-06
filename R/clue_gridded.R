@@ -21,7 +21,7 @@
 clue_gridded <- function(scene, file, type, name = NULL, ...){
 
   assertClass(x = scene, classes = "scene")
-  assertCharacter(x = name, len = 1, any.missing = FALSE, null.ok = TRUE)
+  assertCharacter(x = name, len = 1, null.ok = TRUE)
   isRast <- testClass(x = file, classes = "SpatRaster")
   assertChoice(x = type, choices = c("initial", "restrictions", "driver", "conversion", "preference"))
 
@@ -102,7 +102,7 @@ clue_gridded <- function(scene, file, type, name = NULL, ...){
 
   } else if(type == "driver"){
 
-    assertCharacter(x = name)
+    assertCharacter(x = name, any.missing = FALSE)
     fileName <- "sc1gr_X_.fil"
     dataType <- datatype(gridded)
 
@@ -130,7 +130,7 @@ clue_gridded <- function(scene, file, type, name = NULL, ...){
 
   } else if(type == "conversion"){
 
-    assertCharacter(x = name)
+    assertCharacter(x = name, any.missing = FALSE)
     fileName <- "sc1gr_X_.fil"
     dataType <- datatype(gridded)
     noData <- -9999
@@ -151,7 +151,7 @@ clue_gridded <- function(scene, file, type, name = NULL, ...){
 
   } else if(type == "preference"){
 
-    assertCharacter(x = name)
+    assertCharacter(x = name, any.missing = FALSE)
     fileName <- "locspec_X_.fil"
     dataType <- "INT1U"
     theID <- NA_integer_
@@ -185,8 +185,7 @@ clue_gridded <- function(scene, file, type, name = NULL, ...){
               filename = paste0(root, fileName, ".asc"),
               overwrite = TRUE,
               datatype = dataType,
-              NAflag = noData,
-              gdal = c("COMPRESS=DEFLATE", "ZLEVEL=9", "PREDICTOR=2"))
+              NAflag = noData)
 
   return(scene)
 }
