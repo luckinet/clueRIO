@@ -1,5 +1,5 @@
 ---
-title: "Getting started"
+title: "Getting Started"
 format:
   html:
     toc: true
@@ -35,29 +35,16 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
+#| eval: false
+
 library(clueRIO)
+library(tidyverse)
 ```
 
+To get you started on building CLUMondo models with the help of `clueRIO`, we go through a little tutorial of the essential steps required to build, parameterize and run such a model.
 
-# Installation
-
-Install the official version from CRAN:
-
-```{r, eval=FALSE}
-# install.packages("clueRIO")
-```
-
-Install the latest development version from github:
-
-```{r, eval=FALSE}
-devtools::install_github("luckinet/clueRIO")
-```
-
-
-# Examples
-
-```{r, eval=FALSE}
-library(clueRIO); library(tibble)
+```{r}
+#| eval: false
 
 data <- system.file("test_data", package = "clueRIO", mustWork = TRUE)
 
@@ -115,8 +102,66 @@ minimal <- minimal |>
 clue_initiate(scene = minimal)
 
 # and finally run the model
-clue_run(scene = minimal)
+clue_run(scene = minimal, clue.exe = ...)
 
 # possibly backup the model outputs
 # clue_backup(scene = minimal)
 ```
+
+Instead of specifying items step by step, one can also streamline this. The functions in this package are optimized to support batch-processing or quickly setting up scenarios where dimensions can be varied according to some scheme. The following shows a possible workflow.
+
+```{r}
+#| eval: false
+
+# open a new scene for the model, like before
+model <- "ls2d1"
+minimal <- clue_scene(
+  root = paste0(tempdir(), "/", model), 
+  name = model, 
+  period = c(2000, 2024),
+  regions = paste0(data, "/test_region.gpkg"),
+  description = "this is a minimal showcase where forest is converted to cropland to produce crops.")
+
+# the following items would be produced in some external script(s) ...
+.grid <- tibble(file = paste0(data, c("/ls2.tif", "/suitability1.tif", "/suitability2_0.tif")), 
+                type = c("initial", "driver", "driver"),
+                name = c(NA_character_, "cropland_suit", "forest_suit"))
+.suit <- tibble(type = c("forest", "forest", "cropland", "cropland"),
+                driver = c("const", "forest_suit", "const", "cropland_suit"),
+                beta = c(1, 1, 1, 1))
+.conv <- tibble(type = "forest",
+                to = "cropland",
+                label = "intensification")
+.prod <- tibble(type = "cropland", 
+                name = "crops",
+                amount = 1,
+                priority = 1)
+.demd <- tibble(name = "crops", 
+                year = c(2000:2024), 
+                region = "ravenholm", 
+                amount = seq(from = 4760, to = 5000, length.out = 25))
+
+#... and can then be easily fed into the functions
+# for example with a for loop (if there are too many items for typing them all)
+for(grd in seq_along(.grid)){
+  
+  minimal <- .grid |> 
+    filter(row_number() == grd) |> 
+    {\(x) clue_gridded(scene = minimal, file = x$file, type = x$type, name = x$name)}()
+  
+}
+
+# or more classically (even though this could be further streamlined )
+minimal <- minimal |>
+  clue_landtype(name = "forest", resistance = 0.5,
+                suitability = .suit |> filter(type == "forest") |> select(-type),
+                conversion = .conv |> filter(type == "forest") |> select(-type)) |>
+  clue_landtype(name = "cropland", resistance = 0.5,
+                suitability = .suit |> filter(type == "cropland") |> select(-type),
+                production = .prod |> filter(type == "cropland") |> select(-type),) |> 
+  clue_goods(name = "crops", demand = .demd |> filter(name == "crops") |> select(-name)) |> 
+  clue_initiate()
+
+clue_run(scene = minimal, clue.exe = ...)
+```
+

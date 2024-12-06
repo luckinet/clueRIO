@@ -823,7 +823,8 @@ scene <- clue_scene(
                                      beta = c(1, 1)),
                 conversion = tibble(to = "cropland", 
                                     label = "intensification"),
-                neighborhood = tibble()) |>  
+                neighborhood = tibble(type = c("const", "forest", "pasture"),
+                                      beta = c(1, 0.5, 0.5))) |>  
   clue_landtype(name = "cropland", 
                 resistance = 0.5,
                 suitability = tibble(driver = c("const", "cropland_suit"),
@@ -1691,6 +1692,7 @@ model <- "ls3d2_cyclic"
 
 ```{r}
 #| eval: false
+#| echo: false
 
 model <- ""
 
@@ -1783,6 +1785,7 @@ model <- ""
 
 ```{r}
 #| eval: false
+#| echo: false
 
 model <- ""
 
@@ -1876,6 +1879,7 @@ model <- ""
 
 ```{r}
 #| eval: false
+#| echo: false
 
 model <- ""
 
@@ -2114,50 +2118,6 @@ model <- "laos"
 #   makeAnimation()
 
 ```
-
-
-```{r}
-#| eval: false
-#| echo: false
-
-# alternative way that may be better suited to batch processing
-# .suit <- tibble(type = c("forest", "forest", "cropland", "cropland"),
-#                 driver = c("const", "forest_suit", "const", "cropland_suit"),
-#                 beta = c(1, 1, 1, 1))
-# .conv <- tibble(type = "forest",
-#                 to = "cropland", 
-#                 label = "intensification")
-# .prod <- tibble(name = "crops", 
-#                 amount = 1,
-#                 priority = 1)
-# 
-# minimal <- minimal |> 
-#   clue_landtype(name = "forest", resistance = 0.5,
-#                 suitability = .suit |> filter(type == "forest"),
-#                 conversion = .conv |> filter(type = "forest")) |> 
-#   clue_landtype(name = "cropland", resistance = 0.5,
-#                 suitability = .suit |> filter(type == "cropland"),
-#                 production = .prod |> filter(name == "crops"))
-
-```
-
-# template 
-
-...
-
-```{r}
-#| eval: false
-
-model <- ""
-
-```
-
-```{r}
-#| eval: false
-#| echo: false
-
-```
-
 
 
 ```{r}
