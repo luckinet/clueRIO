@@ -41,7 +41,13 @@
 #'   \code{weight}. Layer names must correspond to names of gridded items of
 #'   \code{type = "preference"} as defined in \code{\link{clue_gridded}}.
 #' @section Suitability:
+#'
+#'   mention specifics about suitabilities
+#'
 #' @section Production:
+#'
+#'   mention specifics about production
+#'
 #' @section Conversion:
 #'
 #'   Conversions are implicitly always set from a focal class to itself. By
@@ -59,7 +65,13 @@
 #'
 #'
 #' @section Neighborhood:
+#'
+#'   mention specifics about neighborhood
+#'
 #' @section Preference:
+#'
+#'   mention specifics about preferences
+#'
 #' @return
 #' @examples
 #' @importFrom checkmate assertClass assertCharacter assertDataFrame assertList
@@ -81,6 +93,8 @@ clue_landtype <- function(scene, name, resistance, suitability,
   assertDataFrame(x = conversion, min.cols = 2, all.missing = FALSE, null.ok = TRUE)
   assertDataFrame(x = neighborhood, all.missing = FALSE, null.ok = TRUE)
   assertDataFrame(x = preference, nrows = 1, all.missing = FALSE, null.ok = TRUE)
+
+  opts <- getOption("clue")
 
   # make sure that gridded layers are available
   if(length(scene@grids) == 0){
@@ -138,8 +152,11 @@ clue_landtype <- function(scene, name, resistance, suitability,
   # handle neighborhood ----
   #
   if(!is.null(neighborhood)){
-    stop("'neighborhood' is currently work in progress")
-    # assertNames(x = names(neighborhood), subset.of = c("const", "weight", "kernel"))
+    # activate in options
+    opts$value[opts$var == "neigh"] <- as.character(1)
+    options(clue = opts)
+    assertNames(x = names(neighborhood), subset.of = c("const", "weight", "kernel"))
+
   } else {
     neighborhood <- tibble(const = NA_real_, weight = NA_real_, kernel = NA)
   }
@@ -166,6 +183,7 @@ clue_landtype <- function(scene, name, resistance, suitability,
   scene@landtypes[[name]] <- temp
 
   # save items ----
+
 
 
 
