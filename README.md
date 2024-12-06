@@ -30,3 +30,24 @@ this R-package, but also the references on the website and in particular
 *Van Asselen, S., Verburg, P.H., 2013. Land cover change or land-use
 intensification: simulating land system change with a global-scale land
 change model. Global Change Biology 19, 3648–3667*.
+
+# Installation
+
+1.  Install the official version from CRAN:
+
+``` r
+# install.packages("clueRIO")
+```
+
+or the latest development version from github:
+
+``` r
+devtools::install_github("luckinet/clueRIO")
+```
+
+2.  Read the mentioned paper!
+3.  Read the vignette on …
+
+- [Getting
+  Started](https://luckinet.github.io/clurio/articles/getting_started.html)
+- [Use Cases](https://luckinet.github.io/clurio/articles/use_cases.html)

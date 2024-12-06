@@ -11,9 +11,9 @@ development:
 
 navbar:
   left:
-    - text: "Getting started"
+    - text: "Getting Started"
       href: articles/getting_started.html
-    - text: "Use cases"
+    - text: "Use Cases"
       href: articles/use_cases.html
     - text: "Reference"
       href: reference/index.html
