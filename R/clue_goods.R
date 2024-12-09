@@ -9,7 +9,7 @@
 #'   demand indicated is the minimum demand that needs to be achieved, any
 #'   overshoot is accepted) or \code{"maximum"} (the demand indicated is the
 #'   maximum that may be reached, any undershoot is accepted).
-#' @param demand [`data.frame(1)`][data.frame]\cr table of when, where and how
+#' @param demand [`data.frame`][data.frame]\cr table of when, where and how
 #'   much of the commodity is produced. Must have names \code{year},
 #'   \code{region} and \code{amount}.
 #' @details

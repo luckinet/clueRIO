@@ -23,7 +23,7 @@ clue_gridded <- function(scene, file, type, name = NULL, ...){
   assertClass(x = scene, classes = "scene")
   assertCharacter(x = name, len = 1, null.ok = TRUE)
   isRast <- testClass(x = file, classes = "SpatRaster")
-  assertChoice(x = type, choices = c("initial", "restrictions", "driver", "conversion", "preference"))
+  assertChoice(x = type, choices = c("initial", "restrictions", "driver", "conversion", "preference", "kernel"))
 
   root <- scene@meta$path
   opts <- getOption("clue")
@@ -152,7 +152,7 @@ clue_gridded <- function(scene, file, type, name = NULL, ...){
   } else if(type == "preference"){
 
     assertCharacter(x = name, any.missing = FALSE)
-    fileName <- "locspec_X_.fil"
+    fileName <- paste0("locspec_", name, "_.fil")
     dataType <- "INT1U"
     theID <- NA_integer_
 
@@ -170,6 +170,17 @@ clue_gridded <- function(scene, file, type, name = NULL, ...){
     .testGrid(test = gridded,
               init = scene@grids$initial$file,
               vals = c(-9999, 0, 1))
+
+  } else if(type == "kernel"){
+    name <- "kernel"
+    dataType <- "FLT4S"
+
+    gridded <- subst(gridded, NA, 0)
+    prev <- tbl_gridded |>
+      filter(type %in% c("kernel"))
+
+    theID <- dim(prev)[1] + 1
+    fileName <- paste0("kernel", theID)
 
   }
 

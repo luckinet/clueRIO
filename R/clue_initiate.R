@@ -12,9 +12,10 @@
 #' @importFrom checkmate assertClass assertFileExists assertTRUE assertChoice
 #' @importFrom purrr map_dfr map
 #' @importFrom dplyr bind_cols bind_rows filter distinct select across all_of
-#'   if_else cur_column rowwise left_join pull arrange any_of row_number
-#' @importFrom tidyr pivot_wider unite unnest complete
+#'   if_else cur_column rowwise left_join pull arrange any_of row_number rename
+#' @importFrom tidyr pivot_wider unite unnest complete everything
 #' @importFrom readr write_delim
+#' @importFrom terra as.matrix rast writeRaster values<-
 #' @export
 
 clue_initiate <- function(scene, module = NULL){
@@ -101,17 +102,17 @@ clue_initiate <- function(scene, module = NULL){
   .alloc1 <- tbl_landtypes |>
     select(type, suitability) |>
     unnest(cols = suitability) |>
-    mutate(across(any_of(.gridded), ~ if_else(!is.na(.x), paste(.x, which(.gridded %in% cur_column()) - 1), NA_character_))) |>
-    unite(col = drivers, any_of(.gridded), sep = "\n\t", na.rm = TRUE, remove = FALSE) |>
-    mutate(nr_drivers = sum(!is.na(across(any_of(.gridded)))),
+    mutate(across(any_of(.gridded), ~ if_else(!is.na(.x), paste(.x, which(.gridded %in% cur_column()) - 1), NA_character_)),
            ID = row_number() - 1) |>
-    mutate(out = paste0(ID, "\n\t", # Number code for land use type
-                        const, "\n", # Constant of regression equation for land use type (ß0)
-                        nr_drivers, "\n\t", # Number of explanatory factors (sc1gr#.fil files) in the regression equation for that land use type.
-                        drivers, "\n")) |>  # On each line the beta coefficients (ß1, ß2, etc.) for the explanatory factor and the number code of the explanatory factor.
-    pull(out)
+    unite(col = drivers, any_of(.gridded), sep = "\n\t", na.rm = TRUE, remove = FALSE) |>
+    rowwise() |>
+    mutate(nr_drivers = sum(!is.na(across(any_of(.gridded))))) |>
+    mutate(out = paste0(ID, "\n\t", # Number code for land type
+                        const, "\n", # Constant of regression equation for land type (ß0)
+                        nr_drivers, "\n\t", # Number of explanatory factors (sc1gr#.fil files) in the regression equation for that land type.
+                        drivers, "\n"))  # On each line the beta coefficients (ß1, ß2, etc.) for the explanatory factor and the number code of the explanatory factor.
 
-  paste(.alloc1, collapse = "\n") |>
+  paste(.alloc1$out, collapse = "\n") |>
     writeLines(paste0(root, "alloc1.reg"))
 
 
@@ -134,27 +135,61 @@ clue_initiate <- function(scene, module = NULL){
               file = paste0(root, "allow.txt"))
 
 
-  ## alloc2.reg ----
-  #
-  # outAlloc2 <- neigh <- opts_old$tables$alloc2
+  # if active
+  if(opts$value[opts$var == "neigh"] == "1"){
 
-  # outAlloc2 <- opts$tables$alloc2
-  # assertTibble(x = outAlloc2, nrows = length(opts$attributes$landuse$system))
-  # assertNames(x = names(outAlloc2), must.include = c("system", "const", "alloc", "neighmat"))
-  # outNeighmat <- paste0(paste0(outAlloc2$weight, collapse = " "), "\n\n", paste(outAlloc2$neighmat, collapse = "\n"))
-  # outAlloc2 <- paste(outAlloc2$alloc, collapse = "\n")
-  # writeLines(outAlloc2, paste0(opts$path$model, "/alloc2.reg"))
-  # writeLines(outNeighmat, paste0(opts$path$model, "/neighmat.txt"))
+    ## alloc2.reg ----
+    .alloc2 <- tbl_landtypes |>
+      select(type, neighborhood) |>
+      unnest(cols = neighborhood) |>
+      mutate(across(any_of(.landtypes), ~ if_else(is.na(.x), 0, .x)),
+             const = if_else(is.na(const), 0, const),
+             ID = row_number() - 1) |>
+      mutate(across(any_of(.landtypes), ~ paste(.x, which(.landtypes %in% cur_column()) - 1))) |>
+      unite(col = factors, any_of(.landtypes), sep = "\n", na.rm = TRUE, remove = FALSE) |>
+      mutate(nr_drivers = sum(!is.na(across(any_of(.gridded))))) |>
+      mutate(out = paste0(ID, "\n", # Number code for land type
+                          const, "\n", # Constant of neighborhood regression equation for land type (ß0)
+                          nr_drivers, "\n", # Number of explanatory factors (land types) in the equation for that land type (for all these the weight - set in neighmat.txt - should be > 0 otherwise the neighborhood is not calculated)
+                          factors, "\n")) # On each line the coefficients for the explanatory factors and the number code of the explanatory factor. In using the neighborhood function, the explanatory factors are the land use types and therefore the number codes are the number codes for the land use types.
 
-  # paste(outAlloc2$alloc, collapse = "\n") |>
-  #   writeLines(paste0(root, "alloc2.reg"))
+    paste(.alloc2$out, collapse = "\n") |>
+      writeLines(paste0(root, "alloc2.reg"))
 
 
-  ## neighmat.txt ----
-  #
-  #
-  # paste0(paste0(outAlloc2$weight, collapse = " "), "\n\n", paste(outAlloc2$neighmat, collapse = "\n")) |>
-  #   writeLines(paste0(root, "neighmat.txt"))
+    ## neighmat.txt ----
+    .kernels <- tbl_gridded |>
+      filter(type == "kernel")
+    .kernels <- map(.x = 1:dim(.kernels)[1],
+                    .f = function(ix){
+                      temp <- filter(.kernels, id == ix)
+                      as.matrix(rast(temp$file), wide = TRUE)
+                    })
+    outKernels <- map(.x = .kernels,
+                      .f = \(x) map(1:dim(x)[1],
+                                    function(ix){
+                                      paste0(x[ix, ], collapse = " ")
+                                    }) |>
+                        paste0(collapse = "\n")) |>
+      unlist()
+
+    .neighmat <- tbl_landtypes |>
+      select(type, neighborhood) |>
+      unnest(cols = neighborhood) |>
+      mutate(weight = if_else(is.na(weight), 0, weight)) |>
+      mutate(nr_types = sum(!is.na(across(any_of(.landtypes))))) |>
+      mutate(across(any_of(.landtypes), ~ which(.landtypes %in% cur_column()))) |>
+      unite(col = types, any_of(.landtypes), sep = " ", na.rm = TRUE, remove = FALSE) |>
+      rowwise() |>
+      mutate(out = if_else(!is.na(kernel),
+                           paste0(nr_types, " ", # number of land types and ...
+                                  types, "\n\n", # the codes for the included types
+                                  (dim(.kernels[[kernel]])[1] - 1) / 2, "\n", # radius of the kernel
+                                  outKernels[kernel]), NA_character_)) # the kernel
+
+    paste0(paste0(.neighmat$weight, collapse = " "), "\n\n", paste0(na.omit(.neighmat$out), collapse = "\n\n"), "\n") |>
+      writeLines(paste0(root, "neighmat.txt"))
+  }
 
 
   ## lusconv.txt ----
@@ -168,14 +203,14 @@ clue_initiate <- function(scene, module = NULL){
     filter(!is.na(name))
 
   .exclusion <- tbl_goods |>
-    select(name, excluded) |>
+    select(goods, excluded) |>
     unnest(cols = excluded) |>
     unnest(cols = data) |>
     mutate(exclude = TRUE)
 
   .lusconv <- .production |>
     select(-amount) |>
-    left_join(.exclusion, by = c("type", "name")) |>
+    left_join(.exclusion, by = "type") |>
     mutate(priority = if_else(!is.na(exclude), -1, priority),
            exclude = NULL) |>
     pivot_wider(names_from = name, values_from = priority) |>
@@ -194,8 +229,49 @@ clue_initiate <- function(scene, module = NULL){
   write_delim(x = .lusmatrix, col_names = FALSE,
               file = paste0(root, "lusmatrix.txt"))
 
-  ## locspec#.fil
-  # make sure that locspec files are available for all land systems
+  # if active
+  if(opts$value[opts$var == "loc_pref"] != "0"){
+    ## locspec#.fil ----
+    .prefs <- tbl_gridded |>
+      filter(type == "preference") |>
+      select(-type, -id) |>
+      rename(layer = driver)
+    .mainRast <- rast(tbl_gridded$file[tbl_gridded$type == "initial"])
+    values(.mainRast) <- 0
+
+    .locspec <- tbl_landtypes |>
+      select(type, preference) |>
+      unnest(cols = preference) |>
+      left_join(.prefs, by = "layer") |>
+      mutate(ID = row_number() - 1,
+             weight = if_else(is.na(weight), 0, weight),
+             file_out = if_else(is.na(file), paste0(root, "locspec", ID, ".fil.asc"), file)) |>
+      rowwise() |>
+      mutate(file_out = str_replace(file_out, pattern = paste0("_", layer, "_"), replacement = as.character(ID)))
+
+    for(i in seq_along(.locspec$file)){
+      thisLocSpec <- .locspec[i, ]
+
+      if(is.na(thisLocSpec$layer)){
+        writeRaster(x = .mainRast,
+                    filename = thisLocSpec$file_out,
+                    overwrite = TRUE,
+                    datatype = "INT1U")
+      } else {
+        writeRaster(x = rast(thisLocSpec$file),
+                    filename = thisLocSpec$file_out,
+                    overwrite = TRUE,
+                    datatype = "FLT4S")
+        oldPref <- list.files(path = root,
+                              pattern = first(str_split(last(str_split(string = thisLocSpec$file, "/")[[1]]), "[.]")[[1]]),
+                              full.names = TRUE)
+        file.remove(oldPref)
+      }
+
+    }
+
+    opts$value[opts$var == "loc_pref"] <- paste0(c(opts$value[opts$var == "loc_pref"], .locspec$weight), collapse = "\t")
+  }
 
 
   ## main.1 ----

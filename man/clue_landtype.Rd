@@ -24,20 +24,26 @@ clue_landtype(
 resistance to land change.}
 
 \item{suitability}{\code{\link{data.frame}}\cr \emph{obligatory} table of
-the result of regression analysis. At least two rows. Includes the constant
-(\emph{beta_0}) and as many drivers and their beta coefficient as there are
-in the regression formula (\emph{beta_1}, \emph{beta_2}, ...). Must have
-the columns \code{driver} and \code{beta}. Driver names must correspond to
-names of gridded items of \code{type = "driver"} as defined in
-\code{\link{clue_gridded}}.}
+the result of regression analysis. Has at least two rows. Must have columns
+\itemize{
+\item \code{driver}: from line 2 onward the name of the driver (must
+correspond to names of gridded items of \code{type = "driver"} as
+defined in \code{\link{clue_gridded}}) and
+\item \code{beta}: the respective regression coefficient
+(beta_\{1, 2, ...\}).}
+The first row must have the driver \code{"const"} with the respective
+\emph{beta_0} value.}
 
 \item{production}{\code{\link{data.frame}}\cr optional table of goods and
-services produced by this land type. Each row contains one good. Must have
-columns \itemize{
+services produced by this land type (for the demand to produce, see
+\code{\link{clue_goods}}). Each row contains one good. Must have 3 columns
+\itemize{
 \item \code{name}: the name of the good or service,
 \item \code{amount}: how much each cell in the map produces and
-\item \code{priority}: .
-}}
+\item \code{priority}: an integer value that indicates the priority with
+which the good or service is produced by the focal land type.
+If a good is produced by more than one land type, the land type with
+a smaller number here is produced with a higher priority.}}
 
 \item{conversion}{\code{\link{data.frame}}\cr optional table of land types
 into which this land type can be converted. Each row contains one type into
@@ -54,10 +60,21 @@ place (from local dynamics and not to fulfill demand of a good or
 service) or
 \item \code{mask}: name of a gridded item (with values 0, 1 and NA/-9999)
 that indicates with value 1 where conversion can take place and with
-0, where they cannot take place.
-}}
+0, where they cannot take place.}}
 
-\item{neighborhood}{\code{\link{data.frame}}\cr work in progress}
+\item{neighborhood}{\code{\link{data.frame}}\cr optional table of
+neighborhood parameters. Has at least four rows. Must have columns
+\itemize{
+\item \code{type}: from line 4 onward the name of the land type that
+influences the suitability of the focal land type if it's in the
+neighborhood (must correspond to names of other land types defined
+with this function) and
+\item \code{beta}: the respective regression coefficient
+(beta_\{1, 2, ...\})}
+The first row has the number of a kernel that must have been defined with
+\code{clue_gridded} and the second row the weight assigned to the
+neighborhood function, and the third row must have the type \code{"const"}
+with the respective \emph{beta_0} value.}
 
 \item{preference}{\code{\link{data.frame}}\cr optional table of suitability
 preferences. One row only. Must have columns \code{layer} and
@@ -69,10 +86,14 @@ Set land types and their attributes
 }
 \section{Suitability}{
 
+
+mention specifics about suitabilities
 }
 
 \section{Production}{
 
+
+mention specifics about production
 }
 
 \section{Conversion}{
@@ -93,9 +114,13 @@ e.g., 5 years in a row, one needs to specify
 
 \section{Neighborhood}{
 
+
+mention specifics about neighborhood
 }
 
 \section{Preference}{
 
+
+mention specifics about preferences
 }
 
