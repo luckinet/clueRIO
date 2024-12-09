@@ -15,8 +15,8 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/getting_started.html">Getting started</a></li>
-<li class="nav-item"><a class="nav-link" href="../articles/use_cases.html">Use cases</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/getting_started.html">Getting Started</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/use_cases.html">Use Cases</a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/luckinet/cluerio"><span class="fa fa-github"></span></a></li>
@@ -42,8 +42,8 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">clue_landtype</span><span class="op">(</span></span>
 <span>  <span class="va">scene</span>,</span>
 <span>  <span class="va">name</span>,</span>
-<span>  resistance <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  suitability <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">resistance</span>,</span>
+<span>  <span class="va">suitability</span>,</span>
 <span>  production <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  conversion <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  neighborhood <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -69,42 +69,110 @@ resistance to land change.</p></dd>
 
 
 <dt id="arg-suitability">suitability<a class="anchor" aria-label="anchor" href="#arg-suitability"></a></dt>
-<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame(2)</a></code><br> obligatory table of the
-result of regression analysis. At least two rows. Includes the constant
-(<em>beta_0</em>) and as many drivers and their beta coefficient as there are
-in the regression formula (<em>beta_1</em>, <em>beta_2</em>, ...). Must have
-the column <code>const</code> and at least one other column with the name of the
-respective suitability driver. Driver names must correspond to names of
-gridded items of <code>type = "driver"</code> as defined in
-<code><a href="clue_gridded.html">clue_gridded</a></code>.</p></dd>
+<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></code><br><em>obligatory</em> table of
+the result of regression analysis. Has at least two rows. Must have columns</p><ul><li><p><code>driver</code>: from line 2 onward the name of the driver (must
+correspond to names of gridded items of <code>type = "driver"</code> as
+defined in <code><a href="clue_gridded.html">clue_gridded</a></code>) and</p></li>
+<li><p><code>beta</code>: the respective regression coefficient
+(beta_{1, 2, ...}).</p></li>
+</ul><p>The first row must have the driver <code>"const"</code> with the respective
+<em>beta_0</em> value.</p></dd>
 
 
 <dt id="arg-production">production<a class="anchor" aria-label="anchor" href="#arg-production"></a></dt>
-<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame(3)</a></code><br> optional table of goods
-and services produced by this land type. Each row contains one good. Must
-have column <code>goods</code> for its name, <code>amount</code> of production and
-<code>priority</code>.</p></dd>
+<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></code><br> optional table of goods and
+services produced by this land type (for the demand to produce, see
+<code><a href="clue_goods.html">clue_goods</a></code>). Each row contains one good. Must have 3 columns</p><ul><li><p><code>name</code>: the name of the good or service,</p></li>
+<li><p><code>amount</code>: how much each cell in the map produces and</p></li>
+<li><p><code>priority</code>: an integer value that indicates the priority with
+which the good or service is produced by the focal land type.
+If a good is produced by more than one land type, the land type with
+a smaller number here is produced with a higher priority.</p></li>
+</ul></dd>
 
 
 <dt id="arg-conversion">conversion<a class="anchor" aria-label="anchor" href="#arg-conversion"></a></dt>
-<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame(.)</a></code><br> optional table of land
-types into which this land type can be converted. Each row contains one
-type into which it can be converted. Must have a column <code>to</code> and
-<code>label</code> and for the details of conversion, optionally one of
-<code>min</code>, <code>max</code>,<code>auto</code> or <code>mask</code>.</p></dd>
+<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></code><br> optional table of land types
+into which this land type can be converted. Each row contains one type into
+which it can be converted. Must have a columns</p><ul><li><p><code>to</code>: name of the land type into which to convert and</p></li>
+<li><p><code>label</code>: name of the conversion process,</p></li>
+</ul><p>and optionally, for the details of conversion one of</p><ul><li><p><code>min</code>: number of time-steps that need to pass until the
+conversion can take place,</p></li>
+<li><p><code>max</code>: number of time-steps within which the conversion can
+take place,</p></li>
+<li><p><code>auto</code>: number of time-steps after which a conversion must take
+place (from local dynamics and not to fulfill demand of a good or
+service) or</p></li>
+<li><p><code>mask</code>: name of a gridded item (with values 0, 1 and NA/-9999)
+that indicates with value 1 where conversion can take place and with
+0, where they cannot take place.</p></li>
+</ul></dd>
 
 
 <dt id="arg-neighborhood">neighborhood<a class="anchor" aria-label="anchor" href="#arg-neighborhood"></a></dt>
-<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame(.)</a></code><br> work in progress</p></dd>
+<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></code><br> optional table of
+neighborhood parameters. Has at least four rows. Must have columns</p><ul><li><p><code>type</code>: from line 4 onward the name of the land type that
+influences the suitability of the focal land type if it's in the
+neighborhood (must correspond to names of other land types defined
+with this function) and</p></li>
+<li><p><code>beta</code>: the respective regression coefficient
+(beta_{1, 2, ...})</p></li>
+</ul><p>The first row has the number of a kernel that must have been defined with
+<code>clue_gridded</code> and the second row the weight assigned to the
+neighborhood function, and the third row must have the type <code>"const"</code>
+with the respective <em>beta_0</em> value.</p></dd>
 
 
 <dt id="arg-preference">preference<a class="anchor" aria-label="anchor" href="#arg-preference"></a></dt>
-<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame(2)</a></code><br> optional table of
-suitability preferences. One row only. Must have columns <code>layer</code> and
+<dd><p><code><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></code><br> optional table of suitability
+preferences. One row only. Must have columns <code>layer</code> and
 <code>weight</code>. Layer names must correspond to names of gridded items of
 <code>type = "preference"</code> as defined in <code><a href="clue_gridded.html">clue_gridded</a></code>.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="suitability">Suitability<a class="anchor" aria-label="anchor" href="#suitability"></a></h2>
+
+
+
+<p>mention specifics about suitabilities</p>
+    </div>
+    <div class="section level2">
+    <h2 id="production">Production<a class="anchor" aria-label="anchor" href="#production"></a></h2>
+
+
+
+<p>mention specifics about production</p>
+    </div>
+    <div class="section level2">
+    <h2 id="conversion">Conversion<a class="anchor" aria-label="anchor" href="#conversion"></a></h2>
+
+
+
+<p>Conversions are implicitly always set from a focal class to itself. By
+default, this conversion is allowed indefinitely and one does not have to
+set it. However, if one wants to limit the persistence of a land type to,
+e.g., 5 years in a row, one needs to specify</p>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">clue_landtype</span>(...,</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>              <span class="at">name =</span> <span class="st">"it"</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>              <span class="at">conversion =</span> <span class="fu">tibble</span>(<span class="at">to =</span> <span class="st">"it"</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>                                  <span class="at">label =</span> <span class="st">"limit_self"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>                                  <span class="at">max =</span> <span class="dv">5</span>))</span></code></pre><p></p></div>
+    </div>
+    <div class="section level2">
+    <h2 id="neighborhood">Neighborhood<a class="anchor" aria-label="anchor" href="#neighborhood"></a></h2>
+
+
+
+<p>mention specifics about neighborhood</p>
+    </div>
+    <div class="section level2">
+    <h2 id="preference">Preference<a class="anchor" aria-label="anchor" href="#preference"></a></h2>
+
+
+
+<p>mention specifics about preferences</p>
+    </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
