@@ -2,13 +2,13 @@
 % Please edit documentation in R/clue_backup.R
 \name{clue_backup}
 \alias{clue_backup}
-\title{Backup the model output}
+\title{Backup the CLUE scene}
 \usage{
 clue_backup(scene)
 }
 \arguments{
-\item{scene}{description}
+\item{scene}{\code{\link[=scene]{scene(1)}}\cr the CLUE scene to back up.}
 }
 \description{
-Backup the model output
+Backup the CLUE scene
 }

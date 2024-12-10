@@ -1,6 +1,6 @@
-#' Backup the model output
+#' Backup the CLUE scene
 #'
-#' @param scene description
+#' @param scene [`scene(1)`][scene]\cr the CLUE scene to back up.
 #' @details
 #' @return
 #' @examples

@@ -1,6 +1,7 @@
 #' Run the model
 #'
-#' @param scene description
+#' @param scene [`scene(1)`][scene]\cr the CLUE scene for which to run the
+#'   model.
 #' @param clue.exe [`character(1)`][character]\cr R packages cannot contain
 #'   executable files, such as the CLUMondo main model executable. Therefore,
 #'   you need to download this

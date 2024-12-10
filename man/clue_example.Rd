@@ -11,18 +11,18 @@ clue_example(path = NULL, until = NULL, verbose = FALSE)
 directory tempdir(), but if you want it in a particular location, specify
 that in this argument.}
 
-\item{until}{\code{\link[=character]{character(1)}}\cr The step until which the scene shall be
-built, one of \code{...},}
+\item{until}{\code{\link[=character]{character(1)}}\cr The step until which the scene
+shall be built, one of \code{...},}
 
-\item{verbose}{\code{\link[=logical]{logical(1)}}\cr be verbose about building the example
-scene (default \code{FALSE}).}
+\item{verbose}{\code{\link[=logical]{logical(1)}}\cr be verbose about building the
+example scene (default \code{FALSE}).}
 }
 \value{
 No return value, called for the side effect of creating an example
 scene at the specified \code{path}.
 }
 \description{
-This function helps setting up an example scene until a certain step.
+This function helps setting up an example scene with custom properties.
 }
 \examples{
 if(dev.interactive()){

@@ -7,7 +7,7 @@
 clue_modify(scene)
 }
 \arguments{
-\item{scene}{description}
+\item{scene}{\code{\link[=scene]{scene(1)}}\cr the CLUE scene to mofidy.}
 }
 \value{
 no return value, called for the side effect of ...

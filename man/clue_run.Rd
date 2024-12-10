@@ -7,7 +7,8 @@
 clue_run(scene, clue.exe, mode)
 }
 \arguments{
-\item{scene}{description}
+\item{scene}{\code{\link[=scene]{scene(1)}}\cr the CLUE scene for which to run the
+model.}
 
 \item{clue.exe}{\code{\link[=character]{character(1)}}\cr R packages cannot contain
 executable files, such as the CLUMondo main model executable. Therefore,

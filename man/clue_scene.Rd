@@ -14,7 +14,9 @@ stored.}
 
 \item{period}{\code{\link[=integer]{integerish(2)}}\cr start and end year of the scene.}
 
-\item{regions}{description}
+\item{regions}{\code{\link[=character]{character(1)}}\cr path to a geopackage file that
+has regions for which to apply a CLUE scene. Can optionally also be an
+opbject of class \link[sf]{st_sf} representation of that file.}
 
 \item{description}{\code{\link[=character]{character(1)}}\cr the description of the
 scene.}
@@ -26,16 +28,12 @@ object of class \code{\link{scene}} that contains initial meta data.
 Create a new CLUE scene
 }
 \examples{
-library(sf)
-region <- st_read(
-  paste0(system.file("test_data", package = "clueRIO"),
-         "/test_region.gpkg"))
-
 minimal <- clue_scene(
     root = paste0(tempdir(), "/ls2d1"),
     name = "ls2d1",
     period = c(2000, 2024),
-    regions = region,
-    description = "this is a minimal showcase where forest is converted to
-                   cropland to produce crops.")
+    regions = paste0(system.file("test_data", package = "clueRIO"),
+                    "/test_region.gpkg"),
+    description = "this is a minimal showcase where forest is converted
+                  to cropland to produce crops.")
 }

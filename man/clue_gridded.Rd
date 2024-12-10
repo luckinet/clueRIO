@@ -2,22 +2,28 @@
 % Please edit documentation in R/clue_gridded.R
 \name{clue_gridded}
 \alias{clue_gridded}
-\title{Set drivers of land systems}
+\title{Set gridded layers}
 \usage{
 clue_gridded(scene, file, type, name = NULL, ...)
 }
 \arguments{
-\item{scene}{description}
+\item{scene}{\code{\link[=scene]{scene(1)}}\cr the CLUE scene to which to add a gridded
+layer.}
 
-\item{file}{description}
+\item{file}{\code{\link[=character]{character(1)}}\cr path to a raster file that can be
+read with \link[terra]{rast}, or an item read in with that function.}
 
-\item{type}{description}
+\item{type}{\code{\link[=character]{character(1)}}\cr type of the gridded layer. This
+determines where the layer can be used. Possible values are
+\code{"initial"}, \code{"restrictions"}, \code{"driver"},
+\code{"conversion"}, \code{"preference"} or \code{"kernel"}. See Details.}
 
-\item{name}{description}
+\item{name}{\code{\link[=character]{character(1)}}\cr name of the layer as it will be
+called when setting up land types with \code{\link{clue_landtype}}.}
 
 \item{...}{additional arguments for for writing files with
 \link[terra]{writeRaster}.}
 }
 \description{
-Set drivers of land systems
+Set gridded layers
 }

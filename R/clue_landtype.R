@@ -1,6 +1,7 @@
 #' Set land types and their attributes
 #'
-#' @param scene description
+#' @param scene [`scene(1)`][scene]\cr the CLUE scene to which to add a land
+#'   type.
 #' @param name [`character(1)`][character]\cr name of the land type.
 #' @param resistance [`numeric(1)`][numeric]\cr the relative conversion
 #'   resistance to land change.

@@ -1,9 +1,15 @@
-#' Set drivers of land systems
+#' Set gridded layers
 #'
-#' @param scene description
-#' @param file description
-#' @param type description
-#' @param name description
+#' @param scene [`scene(1)`][scene]\cr the CLUE scene to which to add a gridded
+#'   layer.
+#' @param file [`character(1)`][character]\cr path to a raster file that can be
+#'   read with \link[terra]{rast}, or an item read in with that function.
+#' @param type [`character(1)`][character]\cr type of the gridded layer. This
+#'   determines where the layer can be used. Possible values are
+#'   \code{"initial"}, \code{"restrictions"}, \code{"driver"},
+#'   \code{"conversion"}, \code{"preference"} or \code{"kernel"}. See Details.
+#' @param name [`character(1)`][character]\cr name of the layer as it will be
+#'   called when setting up land types with \code{\link{clue_landtype}}.
 #' @param ... additional arguments for for writing files with
 #'   \link[terra]{writeRaster}.
 #' @details

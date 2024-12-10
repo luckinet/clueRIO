@@ -16,7 +16,8 @@ clue_landtype(
 )
 }
 \arguments{
-\item{scene}{description}
+\item{scene}{\code{\link[=scene]{scene(1)}}\cr the CLUE scene to which to add a land
+type.}
 
 \item{name}{\code{\link[=character]{character(1)}}\cr name of the land type.}
 

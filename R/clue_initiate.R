@@ -4,7 +4,8 @@
 #' parallel that everything is set up properly.
 #' @param scene [`scene(1)`][scene]\cr the CLUE scene for which to prepare the
 #'   model directory.
-#' @param module description
+#' @param module [`character(1)`][character]\cr name of a module to modify a
+#'   vanilla model.
 #' @details
 #' @examples
 #' @return no return value, called for the side-effect of creating directories

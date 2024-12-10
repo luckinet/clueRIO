@@ -10,7 +10,8 @@ clue_initiate(scene, module = NULL)
 \item{scene}{\code{\link[=scene]{scene(1)}}\cr the CLUE scene for which to prepare the
 model directory.}
 
-\item{module}{description}
+\item{module}{\code{\link[=character]{character(1)}}\cr name of a module to modify a
+vanilla model.}
 }
 \value{
 no return value, called for the side-effect of creating directories

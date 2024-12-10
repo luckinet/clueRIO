@@ -4,24 +4,22 @@
 #'   stored.
 #' @param name [`character(1)`][character]\cr the name of the scene.
 #' @param period [`integerish(2)`][integer]\cr start and end year of the scene.
-#' @param regions description
+#' @param regions [`character(1)`][character]\cr path to a geopackage file that
+#'   has regions for which to apply a CLUE scene. Can optionally also be an
+#'   opbject of class \link[sf]{st_sf} representation of that file.
 #' @param description [`character(1)`][character]\cr the description of the
 #'   scene.
 #' @details
 #' @return object of class \code{\link{scene}} that contains initial meta data.
 #' @examples
-#' library(sf)
-#' region <- st_read(
-#'   paste0(system.file("test_data", package = "clueRIO"),
-#'          "/test_region.gpkg"))
-#'
 #' minimal <- clue_scene(
 #'     root = paste0(tempdir(), "/ls2d1"),
 #'     name = "ls2d1",
 #'     period = c(2000, 2024),
-#'     regions = region,
-#'     description = "this is a minimal showcase where forest is converted to
-#'                    cropland to produce crops.")
+#'     regions = paste0(system.file("test_data", package = "clueRIO"),
+#'                     "/test_region.gpkg"),
+#'     description = "this is a minimal showcase where forest is converted
+#'                   to cropland to produce crops.")
 #' @importFrom checkmate assertCharacter assertDirectoryExists assertIntegerish
 #' @importFrom stringr str_replace_all
 #' @importFrom sf write_sf

@@ -1,17 +1,17 @@
-#' Set goods or services and their attributes
+#' Set goods (or services) and their attributes
 #'
-#' @param scene description
-#' @param name [`character(1)`][character]\cr name of the commodity.
+#' @param scene [`scene(1)`][scene]\cr the CLUE scene to which to add a good.
+#' @param name [`character(1)`][character]\cr name of the good.
 #' @param excluded [`character(.)`][character]\cr land types from which the
-#'   commodity is excluded to be produced.
+#'   good is excluded to be produced.
 #' @param match [`character(1)`][character]\cr the type of match for this
-#'   commodity, either \code{"exact"} (the default), \code{"minimum"} (the
+#'   good, either \code{"exact"} (the default), \code{"minimum"} (the
 #'   demand indicated is the minimum demand that needs to be achieved, any
 #'   overshoot is accepted) or \code{"maximum"} (the demand indicated is the
 #'   maximum that may be reached, any undershoot is accepted).
-#' @param demand [`data.frame`][data.frame]\cr table of when, where and how
-#'   much of the commodity is produced. Must have names \code{year},
-#'   \code{region} and \code{amount}.
+#' @param demand [`data.frame`][data.frame]\cr table of when, where and how much
+#'   of the good is produced. Must have names \code{year}, \code{region}
+#'   and \code{amount}.
 #' @details
 #' @return
 #' @importFrom checkmate assertClass assertCharacter assertChoice
