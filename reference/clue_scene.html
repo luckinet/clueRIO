@@ -60,7 +60,9 @@ stored.</p></dd>
 
 
 <dt id="arg-regions">regions<a class="anchor" aria-label="anchor" href="#arg-regions"></a></dt>
-<dd><p>description</p></dd>
+<dd><p><code><a href="https://rdrr.io/r/base/character.html" class="external-link">character(1)</a></code><br> path to a geopackage file that
+has regions for which to apply a CLUE scene. Can optionally also be an
+opbject of class <a href="https://r-spatial.github.io/sf/reference/sf.html" class="external-link">st_sf</a> representation of that file.</p></dd>
 
 
 <dt id="arg-description">description<a class="anchor" aria-label="anchor" href="#arg-description"></a></dt>
@@ -75,28 +77,15 @@ scene.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE</span>
-<span class="r-in"><span><span class="va">region</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"test_data"</span>, package <span class="op">=</span> <span class="st">"clueRIO"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>         <span class="st">"/test_region.gpkg"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Reading layer `test_region' from data source </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   `/home/runner/work/_temp/Library/clueRIO/test_data/test_region.gpkg' </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   using driver `GPKG'</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 1 feature and 2 fields</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POLYGON</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 0 ymin: 0 xmax: 100 ymax: 100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Projected CRS: Undefined Cartesian SRS with unknown unit</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">minimal</span> <span class="op">&lt;-</span> <span class="fu">clue_scene</span><span class="op">(</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">minimal</span> <span class="op">&lt;-</span> <span class="fu">clue_scene</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    root <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"/ls2d1"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    name <span class="op">=</span> <span class="st">"ls2d1"</span>,</span></span>
 <span class="r-in"><span>    period <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">2024</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    regions <span class="op">=</span> <span class="va">region</span>,</span></span>
-<span class="r-in"><span>    description <span class="op">=</span> <span class="st">"this is a minimal showcase where forest is converted to</span></span></span>
-<span class="r-in"><span><span class="st">                   cropland to produce crops."</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> creating model directory /tmp/Rtmpi5mKrR/ls2d1/.</span>
+<span class="r-in"><span>    regions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"test_data"</span>, package <span class="op">=</span> <span class="st">"clueRIO"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                    <span class="st">"/test_region.gpkg"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    description <span class="op">=</span> <span class="st">"this is a minimal showcase where forest is converted</span></span></span>
+<span class="r-in"><span><span class="st">                  to cropland to produce crops."</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> creating model directory /tmp/RtmpFARxgK/ls2d1/.</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -62,9 +62,8 @@
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
 <p>This is a (incomplete) list of potential use cases of this software.
-They all are reflected by unit tests included in this package and show
-what functions are required at minimum to build a valid <a href="https://www.environmentalgeography.nl/site/data-models/models/clumondo-model/" class="external-link">CLUMondo</a>
-model.</p>
+They show what functions are required at minimum to build a valid <a href="https://www.environmentalgeography.nl/site/data-models/models/clumondo-model/" class="external-link">CLUMondo</a>
+model of a certain kind.</p>
 <div class="section level3">
 <h3 id="example-data">Example data<a class="anchor" aria-label="anchor" href="#example-data"></a>
 </h3>
@@ -128,8 +127,9 @@ rate required only by the demand of crops.</p>
 </h3>
 <p>In a system with cropland and forest, convert forest to cropland at a
 rate required only by the demand of crops. Here, each year is calculated
-step by step (allowing further modules to interact with the input data
-of each new time step).</p>
+step by step, allowing further modules to interact with the input data
+of each new time step. This is not shown here yet, but is required as a
+prerequisite for some of the modifiers, discussed below.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="st">"ls2d1_step"</span></span>
 <span></span>
@@ -219,7 +219,10 @@ of each new time step).</p>
 <div class="section level3">
 <h3 id="ls2d1-location-preferences">ls2d1, location preferences<a class="anchor" aria-label="anchor" href="#ls2d1-location-preferences"></a>
 </h3>
-<p>…</p>
+<p>In a system with cropland and forest, convert forest to cropland at a
+rate required only by the demand of crops. To indicate where forest
+would grow preferentially, forest has a location specific preference
+assigned to it.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="st">"ls2d1_preferences"</span></span>
 <span></span>
