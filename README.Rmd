@@ -44,7 +44,7 @@ devtools::install_github("luckinet/clueRIO")
 2. Read the mentioned paper and the CLUMondo documentation.
 2. Read the vignette on ...
 
-- [Getting Started](https://luckinet.github.io/clurio/articles/getting_started.html)
-- [Use Cases](https://luckinet.github.io/clurio/articles/use_cases.html)
+- [Getting Started](https://luckinet.github.io/clueRIO/articles/getting_started.html)
+- [Use Cases](https://luckinet.github.io/clueRIO/articles/use_cases.html)
 
 
