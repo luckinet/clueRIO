@@ -36,7 +36,7 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-This is a (incomplete) list of potential use cases of this software. They all are reflected by unit tests included in this package and show what functions are required at minimum to build a valid [CLUMondo](https://www.environmentalgeography.nl/site/data-models/models/clumondo-model/) model.
+This is a (incomplete) list of potential use cases of this software. They show what functions are required at minimum to build a valid [CLUMondo](https://www.environmentalgeography.nl/site/data-models/models/clumondo-model/) model of a certain kind.
 
 
 ## Example data
@@ -106,7 +106,7 @@ clue_run(scene = scene, clue.exe = ...)
 
 ## ls2d1, stepwise
 
-In a system with cropland and forest, convert forest to cropland at a rate required only by the demand of crops. Here, each year is calculated step by step (allowing further modules to interact with the input data of each new time step).
+In a system with cropland and forest, convert forest to cropland at a rate required only by the demand of crops. Here, each year is calculated step by step, allowing further modules to interact with the input data of each new time step. This is not shown here yet, but is required as a prerequisite for some of the modifiers, discussed below.
 
 ```{r}
 #| eval: false
@@ -544,7 +544,7 @@ model <- "ls2d1_selfLimit"
 
 ## ls2d1, location preferences
 
-...
+In a system with cropland and forest, convert forest to cropland at a rate required only by the demand of crops. To indicate where forest would grow preferentially, forest has a location specific preference assigned to it.
 
 ```{r}
 #| eval: false
