@@ -45,9 +45,10 @@ or the latest development version from github:
 devtools::install_github("luckinet/clueRIO")
 ```
 
-2.  Read the mentioned paper!
+2.  Read the mentioned paper and the CLUMondo documentation.
 3.  Read the vignette on …
 
 - [Getting
-  Started](https://luckinet.github.io/clurio/articles/getting_started.html)
-- [Use Cases](https://luckinet.github.io/clurio/articles/use_cases.html)
+  Started](https://luckinet.github.io/clueRIO/articles/getting_started.html)
+- [Use
+  Cases](https://luckinet.github.io/clueRIO/articles/use_cases.html)
