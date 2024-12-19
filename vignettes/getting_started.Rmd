@@ -151,7 +151,7 @@ for(grd in seq_along(.grid)){
   
 }
 
-# or more classically (even though this could be further streamlined )
+# or more classically (even though this could be further streamlined just as above)
 minimal <- minimal |>
   clue_landtype(name = "forest", resistance = 0.5,
                 suitability = .suit |> filter(type == "forest") |> select(-type),

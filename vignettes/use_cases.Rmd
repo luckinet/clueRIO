@@ -36,15 +36,20 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-This is a (incomplete) list of potential use cases of this software. They show what functions are required at minimum to build a valid [CLUMondo](https://www.environmentalgeography.nl/site/data-models/models/clumondo-model/) model of a certain kind.
+This is a (incomplete) list of potential use cases of this software. This document show what functions are required at minimum to build a valid [CLUMondo](https://www.environmentalgeography.nl/site/data-models/models/clumondo-model/) model of a certain setup.
 
+In this document you will first find an overview of the example data used to build the use cases and scenarios. Then, use cases are sorted by complexity and grouped by the involved land systems and the demands according to which the systems will be modified. The first group has use cases that can be run on two land systems and one demand. The second group is extension of this and includes additionally a third land system, but still only one demand. The third group is again an extension of the previous group and finally includes additionally a second demand. At the end of the document, there are examples that show more complex use cases.
+
+There is a little note: Since CLUE can be and is used in various fields, we simply use the term land system or just system to denote the land surface descriptions, be they land use, land cover or any other system.
+
+Also, this document is still work in progress (and we welcome any additions)!
 
 ## Example data
 
-Let's first load the requried packages and define the path for example data.
+Let's first load the required packages and define the path for example data.
 
 ```{r setup}
-#| eval: false
+#| eval: true
 
 library(clueRIO)
 library(tidyverse)
@@ -53,10 +58,16 @@ library(terra)
 data <- system.file("test_data", package = "clueRIO", mustWork = TRUE)
 ```
 
-There are various tables and raster layers used throughout this tutorial.
+There are various tables and (highly simplified) raster layers used throughout this tutorial. Below we see, as an example, maps of land systems and suitability maps. Other data are generated with simple example code only when they are needed.
 
 ```{r}
-# plot the rasters
+(testRast <- list.files(data, full.names = TRUE))
+
+# land systems
+plot(rast(testRast[str_detect(testRast, "ls")]))
+
+# different suitability layers
+plot(rast(testRast[str_detect(testRast, "suitability")]))
 ```
 
 
@@ -2134,10 +2145,12 @@ model <- "laos"
 
 temp <- rast("H:/rdev/clueRIO/_misc/example_data/preferences1.asc")
 writeRaster(x = temp,
-            filename = paste0("H:/rdev/clueRIO/inst/test_data/preference1.tif"),
+            # filename = paste0("H:/rdev/clueRIO/inst/test_data/ls2.tif"),
+            filename = paste0("/media/se87kuhe/projects/rdev/clueRIO/inst/test_data/suitability3.tif"),
             overwrite = TRUE,
             filetype = "GTiff",
-            datatype = "INT1U",
+            # datatype = "INT1U",
+            datatype = "FLT4S",
             gdal = c("COMPRESS=DEFLATE", "ZLEVEL=9", "PREDICTOR=2"))
 ```
 
