@@ -52,7 +52,8 @@ Let's first load the required packages and define the path for example data.
 #| eval: true
 
 library(clueRIO)
-library(tidyverse)
+library(stringr)
+library(tibble)
 library(terra)
 
 data <- system.file("test_data", package = "clueRIO", mustWork = TRUE)
